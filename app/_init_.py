@@ -16,9 +16,9 @@ def create_app():
     app.register_blueprint(order_bp, url_prefix="/orders")
     app.register_blueprint(payment_bp, url_prefix="/payments")
 
-@app.route("/")
-def index():
-    return "Restaurant Service API is running!"
+    @app.route("/")
+    def index():
+        return "Restaurant Service API is running!"
 
 
     return app
