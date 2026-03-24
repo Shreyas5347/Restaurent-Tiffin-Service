@@ -1,7 +1,13 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
+from app.utils.helpers import token_required
 
-order_bp=Blueprint("order",__name__)
+order_bp = Blueprint("orders", __name__)
 
-@order_bp.route("/",methods=["GET"])
-def order():
-    return "Order Route Working"
+@order_bp.route("/secure-test", methods=["GET"])
+@token_required
+def secure_test(user_id, role):
+    return jsonify({
+        "message": "Protected route accessed successfully",
+        "user_id": user_id,
+        "role": role
+    }), 200

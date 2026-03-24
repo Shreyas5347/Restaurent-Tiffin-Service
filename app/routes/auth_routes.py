@@ -1,4 +1,5 @@
 from flask import request, Blueprint, jsonify
+from app.services.auth_services import admin_login
 from app.services.auth_services import register_user, login_user
 
 auth_bp = Blueprint("auth", __name__)
@@ -38,4 +39,21 @@ def login():
         return jsonify({"error": "Email and password are required"}), 400
 
     response, status = login_user(email, password)
+    return jsonify(response), status
+
+@auth_bp.route("/admin-login", methods=["POST"])
+def admin_login_route():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    email = data.get("email")
+    password = data.get("password")
+
+    if not email or not password:
+        return jsonify({"error": "Email and password are required"}), 400
+
+    
+    response, status = admin_login(email, password)
     return jsonify(response), status
