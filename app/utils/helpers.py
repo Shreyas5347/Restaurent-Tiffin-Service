@@ -2,6 +2,10 @@ from functools import wraps
 from flask import request, jsonify
 from app.utils.security import decode_token
 import jwt
+import razorpay
+from app.config.config import Config
+
+client = razorpay.Client(auth=(Config.RAZORPAY_KEY_ID, Config.RAZORPAY_KEY_SECRET))
 
 def token_required(f):
     @wraps(f)
