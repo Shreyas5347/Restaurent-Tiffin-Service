@@ -64,20 +64,22 @@ def create_razorpay_order(user_id, order_id):
 def handle_razorpay_webhook(payload_body, signature_header):
     try:
         # Verify webhook signature using the raw payload body and signature header.
-        # Ensure RAZORPAY_WEBHOOK_SECRET is correctly set in environment.
         if not Config.RAZORPAY_WEBHOOK_SECRET:
+            print("Webhook Error: RAZORPAY_WEBHOOK_SECRET is not configured.")
             return {"error": "Webhook secret not configured"}, 500
 
-        payload_str = payload_body.decode("utf-8") if isinstance(payload_body, bytes) else payload_body
+        # Razorpay's verify_webhook_signature expects the raw body payload (string or bytes)
         razorpay_client.utility.verify_webhook_signature(
-            payload_str,
+            payload_body,
             signature_header, 
             Config.RAZORPAY_WEBHOOK_SECRET
         )
     except razorpay.errors.SignatureVerificationError:
+        print(f"Webhook Error: Invalid signature received for signature: {signature_header}")
         return {"error": "Invalid signature"}, 400
     except Exception as e:
-        return {"error": str(e)}, 400
+        print(f"Webhook Error: {str(e)}")
+        return {"error": "Internal server error during webhook verification"}, 400
 
     # Parse payload
     try:
