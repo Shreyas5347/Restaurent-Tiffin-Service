@@ -51,7 +51,13 @@ def create_razorpay_order(user_id, order_id):
         return {"error": f"Failed to create Razorpay order: {str(e)}"}, 500
 
     # Step 5: Create payment record in pending state
-    create_payment(order_id, total_price, status="pending", razorpay_order_id=razorpay_order_id)
+    create_payment(
+        order_id, 
+        total_price, 
+        status="pending", 
+        razorpay_order_id=razorpay_order_id,
+        payment_method="Pending"
+    )
 
     return {
         "message": "Order created successfully",
@@ -91,28 +97,41 @@ def handle_razorpay_webhook(payload_body, signature_header):
 
     # Handle payment authorized or captured
     if event_type in ['payment.captured', 'order.paid']:
-        payment_entity = data['payload']['payment']['entity']
-        razorpay_order_id = payment_entity.get('order_id')
-        razorpay_payment_id = payment_entity.get('id')
-        payment_method = payment_entity.get('method')
-        
-        # Find the payment record
-        payment_record = get_payment_by_razorpay_order_id(razorpay_order_id)
-        if not payment_record:
-            return {"error": "Payment record not found"}, 404
+        try:
+            # Safely navigate the Razorpay payload structure
+            if 'payload' not in data or 'payment' not in data['payload']:
+                return {"error": "Invalid payload format: missing payment details"}, 400
+                
+            payment_entity = data['payload']['payment']['entity']
+            razorpay_order_id = payment_entity.get('order_id')
+            razorpay_payment_id = payment_entity.get('id')
+            payment_method = payment_entity.get('method')
             
-        if payment_record['status'] == 'success':
-            # Idempotency check: Already processed
-            return {"message": "Already processed"}, 200
-
-        # Update payment and order records
-        update_payment_with_razorpay(
-            razorpay_order_id=razorpay_order_id, 
-            status="success", 
-            razorpay_payment_id=razorpay_payment_id, 
-            payment_method=payment_method
-        )
-        update_order_status(payment_record['order_id'], "paid")
+            # Signature is provided in the headers, passed to this function as signature_header
+            razorpay_signature = signature_header
+            
+            # Find the payment record
+            payment_record = get_payment_by_razorpay_order_id(razorpay_order_id)
+            if not payment_record:
+                print(f"Webhook Warning: No record found for Razorpay Order ID {razorpay_order_id}")
+                return {"error": "Payment record not found"}, 404
+                
+            if payment_record['status'] == 'success':
+                # Idempotency check: Already processed
+                return {"message": "Already processed"}, 200
+    
+            # Update payment and order records
+            update_payment_with_razorpay(
+                razorpay_order_id=razorpay_order_id, 
+                status="success", 
+                razorpay_payment_id=razorpay_payment_id, 
+                razorpay_signature=razorpay_signature,
+                payment_method=payment_method
+            )
+            update_order_status(payment_record['order_id'], "paid")
+        except Exception as e:
+            print(f"Webhook Processing Error: {str(e)}")
+            return {"error": "Failed to process webhook data"}, 500
 
     elif event_type == 'payment.failed':
         payment_entity = data['payload']['payment']['entity']

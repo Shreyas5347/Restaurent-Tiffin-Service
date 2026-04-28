@@ -1,16 +1,16 @@
 from app.database.db import get_db_connection
 
-def create_payment(order_id, amount, status="pending", razorpay_order_id=None):
+def create_payment(order_id, amount, status="pending", razorpay_order_id=None, payment_method="Pending"):
     conn = get_db_connection()
     try:
         cursor = conn.cursor()
         try:
             query = """
-            INSERT INTO payments (order_id, amount, status, razorpay_order_id)
-            VALUES (%s, %s, %s, %s)
+            INSERT INTO payments (order_id, amount, status, razorpay_order_id, payment_method)
+            VALUES (%s, %s, %s, %s, %s)
             RETURNING id;
             """
-            cursor.execute(query, (order_id, amount, status, razorpay_order_id))
+            cursor.execute(query, (order_id, amount, status, razorpay_order_id, payment_method))
             payment_id = cursor.fetchone()[0]
             conn.commit()
             return payment_id
@@ -37,6 +37,9 @@ def update_payment_with_razorpay(razorpay_order_id, status, razorpay_payment_id=
         conn.close()
 
 def get_payment_by_razorpay_order_id(razorpay_order_id):
+    if not razorpay_order_id:
+        return None
+        
     conn = get_db_connection()
     try:
         cursor = conn.cursor()
