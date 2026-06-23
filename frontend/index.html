@@ -1,13 +1,1815 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apus Kitchen - Ghar Ka Khana, Dil Se Banaya</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        :root {
+            --bg: #FFF8F0;
+            --primary-dark: #1A0A00;
+            --accent: #F5A623;
+            --cta: #FF6B35;
+            --danger: #C0392B;
+            --gold-border: #F0C88A;
+            --white: #FFFFFF;
+            --cream-dark: #F5E6D3;
+            --green: #27AE60;
+            --red: #E74C3C;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--primary-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--primary-dark);
+            z-index: 1000;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--cream-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent);
+        }
+
+        .nav-cta {
+            background: var(--cta);
+            color: var(--white);
+            padding: 10px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.35);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+            padding-top: 64px;
+            min-height: 100vh;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Section spacing */
+        .section {
+            padding: 80px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-tag {
+            display: inline-block;
+            background: rgba(245, 166, 35, 0.12);
+            color: var(--accent);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 2.4rem;
+            color: var(--primary-dark);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 92vh;
+            background: linear-gradient(160deg,
+                    #1A0A00 0%,
+                    #3D1400 40%,
+                    #5C2200 70%,
+                    #7A3200 100%);
+            position: relative;
+            overflow: hidden;
+            padding: 100px 24px 80px;
+            text-align: center;
+        }
+
+        .hero-dots {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(245, 166, 35, 0.12) 1.5px, transparent 1.5px);
+            background-size: 40px 40px;
+            animation: dotFloat 25s linear infinite;
+        }
+
+        @keyframes dotFloat {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 40px 40px;
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            width: 110px;
+            height: 110px;
+            background: linear-gradient(135deg, #F5A623, #E89419);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 28px;
+            position: relative;
+            box-shadow: 0 0 0 12px rgba(245, 166, 35, 0.15), 0 0 0 24px rgba(245, 166, 35, 0.08);
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            color: var(--white);
+            margin-bottom: 8px;
+            line-height: 1.15;
+        }
+
+        .hero h1 .line1 {
+            color: var(--white);
+        }
+
+        .hero h1 .line2 {
+            color: var(--accent);
+            display: block;
+        }
+
+        .hero p {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 1.05rem;
+            max-width: 520px;
+            margin: 0 auto 32px;
+            line-height: 1.7;
+        }
+
+        .hero-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+            margin-bottom: 36px;
+        }
+
+        .hero-badge-pill {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1.5px solid rgba(245, 166, 35, 0.3);
+            color: var(--cream-dark);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            padding: 14px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--white);
+            padding: 14px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Kitchen Section */
+        .kitchen-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .kitchen-photo {
+            background: linear-gradient(135deg, #2D1810, #1A0A00);
+            border-radius: 20px;
+            height: 380px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--gold-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kitchen-photo .emoji {
+            font-size: 5rem;
+            margin-bottom: 12px;
+        }
+
+        .kitchen-photo .caption {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .kitchen-text p {
+            color: #5A4A3A;
+            margin-bottom: 16px;
+            font-size: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .stat-pill {
+            background: var(--white);
+            border: 1.5px solid var(--gold-border);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 0.95rem;
+        }
+
+        /* Today's Special */
+        .urgency-banner {
+            background: var(--cta);
+            color: var(--white);
+            text-align: center;
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: 600;
+            margin-bottom: 32px;
+            font-size: 1rem;
+        }
+
+        .special-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .special-card {
+            background: var(--white);
+            border: 2px solid var(--gold-border);
+            border-radius: 20px;
+            padding: 28px;
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .special-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .live-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--green);
+            color: var(--white);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            animation: livePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes livePulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        .special-card .emoji {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        .special-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 6px;
+        }
+
+        .special-card p {
+            color: #5A4A3A;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .special-card .price {
+            color: var(--cta);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .countdown-box {
+            background: var(--primary-dark);
+            color: var(--accent);
+            padding: 16px 28px;
+            border-radius: 16px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 24px;
+            display: inline-block;
+        }
+
+        .countdown-box span {
+            color: var(--white);
+        }
+
+        /* Best Sellers */
+        .dishes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .dish-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1.5px solid var(--gold-border);
+            transition: transform 0.3s;
+        }
+
+        .dish-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .dish-card-top {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+        }
+
+        .dish-card-body {
+            padding: 20px;
+        }
+
+        .dish-card-body h3 {
+            font-size: 1.15rem;
+            margin-bottom: 6px;
+        }
+
+        .dish-card-body p {
+            color: #5A4A3A;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .dish-card-body .price {
+            color: var(--cta);
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 14px;
+            display: block;
+        }
+
+        .dish-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .dish-tag {
+            background: rgba(245, 166, 35, 0.1);
+            color: var(--accent);
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .dish-tag.hot {
+            background: rgba(192, 57, 43, 0.1);
+            color: var(--danger);
+        }
+
+        .dish-tag.veg {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--green);
+        }
+
+        .btn-small {
+            background: var(--cta);
+            color: var(--white);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-small:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Combo Builder */
+        .combo-builder {
+            background: var(--white);
+            border: 2px solid var(--gold-border);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .combo-step {
+            margin-bottom: 28px;
+        }
+
+        .combo-step h4 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: var(--primary-dark);
+        }
+
+        .combo-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .combo-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1.5px solid var(--cream-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .combo-option:hover {
+            border-color: var(--gold-border);
+            background: rgba(245, 166, 35, 0.04);
+        }
+
+        .combo-option.selected {
+            border-color: var(--accent);
+            background: rgba(245, 166, 35, 0.08);
+        }
+
+        .combo-option input {
+            cursor: pointer;
+        }
+
+        .combo-option .opt-name {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .combo-option .opt-price {
+            color: var(--cta);
+            font-weight: 600;
+        }
+
+        .combo-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 2px dashed var(--gold-border);
+            margin-bottom: 20px;
+        }
+
+        .combo-total .label {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .combo-total .amount {
+            font-size: 1.6rem;
+            color: var(--cta);
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Reviews */
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .review-card {
+            background: var(--white);
+            border: 1.5px solid var(--gold-border);
+            border-radius: 20px;
+            padding: 28px;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .review-avatar {
+            width: 48px;
+            height: 48px;
+            background: var(--accent);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .review-meta h4 {
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+
+        .review-meta .loc {
+            font-size: 0.8rem;
+            color: #8A7A6A;
+        }
+
+        .review-stars {
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .review-text {
+            color: #5A4A3A;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .review-source {
+            font-size: 0.8rem;
+            color: #9A8A7A;
+        }
+
+        /* Gallery */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .gallery-card {
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .gallery-card:hover {
+            transform: scale(1.04);
+        }
+
+        .gallery-card:hover .gallery-overlay {
+            background: rgba(26, 10, 0, 0.55);
+        }
+
+        .gallery-card .emoji {
+            font-size: 4rem;
+            z-index: 2;
+            position: relative;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(26, 10, 0, 0.35);
+            transition: background 0.3s;
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 1rem;
+            z-index: 2;
+        }
+
+        /* Festival */
+        .festival-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .festival-card {
+            border-radius: 20px;
+            padding: 28px;
+            text-align: center;
+            color: var(--white);
+            transition: transform 0.3s;
+        }
+
+        .festival-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .festival-card .emoji {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .festival-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .festival-card p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 12px;
+        }
+
+        .festival-card .price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .festival-card .btn-small {
+            background: var(--white);
+            color: var(--primary-dark);
+        }
+
+        .festival-card .btn-small:hover {
+            background: var(--cream-dark);
+        }
+
+        /* About */
+        .about-section {
+            background: linear-gradient(135deg, #2D1810, #1A0A00);
+            color: var(--cream-dark);
+            text-align: center;
+            padding: 100px 24px;
+        }
+
+        .about-section .section-title {
+            color: var(--white);
+        }
+
+        .about-section p {
+            max-width: 640px;
+            margin: 0 auto 20px;
+            font-size: 1.05rem;
+            opacity: 0.85;
+        }
+
+        .value-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 32px;
+        }
+
+        .value-pill {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(245, 166, 35, 0.25);
+            color: var(--cream-dark);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+        }
+
+        /* Menu Page */
+        .menu-hero {
+            background: linear-gradient(135deg, #2D1810, #1A0A00);
+            padding: 80px 24px 60px;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .menu-hero h1 {
+            font-size: 2.6rem;
+            margin-bottom: 10px;
+        }
+
+        .menu-hero p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+
+        .filter-tab {
+            background: var(--white);
+            border: 1.5px solid var(--gold-border);
+            padding: 10px 22px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .filter-tab:hover {
+            border-color: var(--accent);
+        }
+
+        .filter-tab.active {
+            background: var(--accent);
+            color: var(--white);
+            border-color: var(--accent);
+        }
+
+        .menu-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--white);
+            border: 1.5px solid var(--gold-border);
+            border-radius: 16px;
+            padding: 18px 22px;
+            margin-bottom: 14px;
+            transition: transform 0.2s;
+        }
+
+        .menu-item:hover {
+            transform: translateX(4px);
+        }
+
+        .menu-icon-box {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            flex-shrink: 0;
+        }
+
+        .menu-icon-box.veg {
+            background: rgba(39, 174, 96, 0.12);
+        }
+
+        .menu-icon-box.non {
+            background: rgba(192, 57, 43, 0.12);
+        }
+
+        .menu-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .menu-dot.veg {
+            background: var(--green);
+        }
+
+        .menu-dot.non {
+            background: var(--danger);
+        }
+
+        .menu-info {
+            flex: 1;
+        }
+
+        .menu-info h4 {
+            font-size: 1.05rem;
+            margin-bottom: 3px;
+        }
+
+        .menu-info p {
+            color: #5A4A3A;
+            font-size: 0.85rem;
+        }
+
+        .menu-price {
+            font-weight: 700;
+            color: var(--cta);
+            font-size: 1.05rem;
+            margin-right: 8px;
+        }
+
+        .menu-bottom-banner {
+            background: linear-gradient(135deg, #2D1810, #1A0A00);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            color: var(--white);
+            margin-top: 40px;
+        }
+
+        .menu-bottom-banner h3 {
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+        }
+
+        .menu-bottom-banner p {
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        /* Contact Page */
+        .contact-hero {
+            background: linear-gradient(135deg, #2D1810, #1A0A00);
+            padding: 80px 24px 60px;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .contact-hero h1 {
+            font-size: 2.6rem;
+            margin-bottom: 10px;
+        }
+
+        .contact-hero p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .info-card {
+            background: var(--white);
+            border: 1.5px solid var(--gold-border);
+            border-radius: 20px;
+            padding: 28px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .info-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .info-card .icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(245, 166, 35, 0.1);
+            color: var(--accent);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin: 0 auto 14px;
+        }
+
+        .info-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+        }
+
+        .info-card p {
+            color: #5A4A3A;
+            font-size: 0.95rem;
+        }
+
+        .hours-card {
+            background: var(--primary-dark);
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 500px;
+            margin: 0 auto 40px;
+            color: var(--accent);
+        }
+
+        .hours-card h4 {
+            color: var(--white);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .hours-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(245, 166, 35, 0.15);
+        }
+
+        .hours-row:last-child {
+            border-bottom: none;
+        }
+
+        .hours-row .day {
+            font-weight: 600;
+        }
+
+        .social-row {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            color: var(--white);
+            transition: transform 0.2s;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .social-btn.insta {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        }
+
+        .social-btn.fb {
+            background: #1877F2;
+        }
+
+        .social-btn.wa {
+            background: #25D366;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 14px 22px;
+            border-radius: 12px;
+            color: var(--white);
+            font-weight: 500;
+            font-size: 0.95rem;
+            animation: toastIn 0.3s ease;
+            max-width: 320px;
+        }
+
+        @keyframes toastIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.success {
+            background: var(--green);
+        }
+
+        .toast.error {
+            background: var(--danger);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .kitchen-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .special-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .dishes-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .reviews-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .festival-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .dishes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .festival-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .combo-builder {
+                padding: 24px;
+            }
+
+            .section {
+                padding: 60px 16px;
+            }
+
+            .hero {
+                padding: 100px 16px 70px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="#" class="nav-logo" onclick="showPage('home'); return false;">🍛 Apus Kitchen</a>
+        <ul class="nav-links">
+            <li><a href="#" onclick="showPage('home'); return false;" id="nav-home" class="active">Home</a></li>
+            <li><a href="#" onclick="showPage('menu'); return false;" id="nav-menu">Menu</a></li>
+            <li><a href="#" onclick="showPage('contact'); return false;" id="nav-contact">Contact</a></li>
+        </ul>
+        <button class="nav-cta" onclick="showPage('menu')">Order Now 🍽️</button>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu"><i
+                class="fas fa-bars"></i></button>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu"
+        style="display:none; position:fixed; top:64px; left:0; right:0; background:var(--primary-dark); z-index:999; padding:20px; flex-direction:column; gap:16px; border-top:1px solid rgba(245,166,35,0.2);">
+        <a href="#" onclick="showPage('home'); toggleMobileMenu(); return false;"
+            style="color:var(--cream-dark); text-decoration:none; font-weight:500; font-size:1.1rem;">Home</a>
+        <a href="#" onclick="showPage('menu'); toggleMobileMenu(); return false;"
+            style="color:var(--cream-dark); text-decoration:none; font-weight:500; font-size:1.1rem;">Menu</a>
+        <a href="#" onclick="showPage('contact'); toggleMobileMenu(); return false;"
+            style="color:var(--cream-dark); text-decoration:none; font-weight:500; font-size:1.1rem;">Contact</a>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- PAGE: HOME -->
+    <div id="page-home" class="page active">
+
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-dots"></div>
+            <div class="hero-content">
+                <div class="hero-badge">🍛</div>
+                <h1><span class="line1">Ghar Ka Khana,</span><span class="line2">Dil Se Banaya</span></h1>
+                <p>Fresh homestyle tiffin & restaurant meals delivered to your door — lovingly cooked every day with
+                    traditional recipes & pure ingredients.</p>
+                <div class="hero-badges">
+                    <span class="hero-badge-pill">🌿 100% Fresh</span>
+                    <span class="hero-badge-pill">🔥 Daily Cooked</span>
+                    <span class="hero-badge-pill">⚡ Fast Delivery</span>
+                    <span class="hero-badge-pill">❤️ Homestyle</span>
+                </div>
+                <div class="hero-ctas">
+                    <button class="btn-primary" onclick="showPage('menu')">See Full Menu ↓</button>
+                    <button class="btn-ghost" onclick="showPage('contact')">Contact Us</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kitchen Section -->
+        <section class="section">
+            <div class="kitchen-grid">
+                <div class="kitchen-photo">
+                    <div class="emoji">👨‍🍳</div>
+                    <div class="caption">Our Kitchen</div>
+                </div>
+                <div class="kitchen-text">
+                    <span class="section-tag">🏠 About Us</span>
+                    <h2 class="section-title">Made with Love & Tradition</h2>
+                    <p>Apus Kitchen started with a simple dream — to serve wholesome, home-cooked meals to busy
+                        Mumbaikars who miss the taste of their mother's kitchen. Every dish is prepared fresh each
+                        morning using traditional recipes passed down through generations.</p>
+                    <p>We believe great food doesn't need fancy plating or exotic ingredients. It needs fresh produce,
+                        the right spices, and a whole lot of love. That's the Apus Kitchen promise.</p>
+                    <div class="stats-grid">
+                        <div class="stat-pill">500+ Customers</div>
+                        <div class="stat-pill">5 yrs Experience</div>
+                        <div class="stat-pill">30+ Menu Items</div>
+                        <div class="stat-pill">4.9⭐ Rating</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Today's Special -->
+        <section class="section" style="background: rgba(245,230,211,0.3); border-radius: 0;">
+            <div style="text-align:center; margin-bottom: 8px;">
+                <span class="section-tag">📅 Today's Special</span>
+                <h2 class="section-title">What's Fresh Today?</h2>
+            </div>
+            <div class="urgency-banner">Order by 10 AM for Lunch · 5 PM for Dinner</div>
+            <div class="special-cards">
+                <div class="special-card">
+                    <span class="live-badge">LIVE TODAY</span>
+                    <div class="emoji">🥣</div>
+                    <h3>Dal Tadka</h3>
+                    <p>Yellow lentils tempered with garlic, cumin & ghee</p>
+                    <div class="price">₹80</div>
+                </div>
+                <div class="special-card">
+                    <span class="live-badge">LIVE TODAY</span>
+                    <div class="emoji">🥘</div>
+                    <h3>Paneer Masala</h3>
+                    <p>Soft cottage cheese in rich tomato gravy</p>
+                    <div class="price">₹110</div>
+                </div>
+                <div class="special-card">
+                    <span class="live-badge">LIVE TODAY</span>
+                    <div class="emoji">🍚</div>
+                    <h3>Jeera Rice</h3>
+                    <p>Fragrant basmati rice with cumin & ghee</p>
+                    <div class="price">₹70</div>
+                </div>
+            </div>
+            <div style="text-align:center; margin-bottom: 20px;">
+                <div class="countdown-box" id="countdown">Next order slot in: <span id="timer">--:--:--</span></div>
+            </div>
+            <div style="text-align:center;">
+                <button class="btn-primary" onclick="showPage('menu')">Order Today's Combo</button>
+            </div>
+        </section>
+
+        <!-- Best Sellers -->
+        <section class="section">
+            <div style="text-align:center; margin-bottom: 40px;">
+                <span class="section-tag">🔥 Customer Favourites</span>
+                <h2 class="section-title">Best Sellers</h2>
+            </div>
+            <div class="dishes-grid" id="best-sellers"></div>
+        </section>
+
+        <!-- Combo Builder -->
+        <section class="section" style="background: rgba(245,230,211,0.3);">
+            <div style="text-align:center; margin-bottom: 32px;">
+                <span class="section-tag">🛒 Build Your Tiffin</span>
+                <h2 class="section-title">Make It Yours</h2>
+            </div>
+            <div class="combo-builder">
+                <div class="combo-step">
+                    <h4>Step 1 — Choose Your Dal</h4>
+                    <div class="combo-options" id="dal-options"></div>
+                </div>
+                <div class="combo-step">
+                    <h4>Step 2 — Choose Your Sabzi</h4>
+                    <div class="combo-options" id="sabzi-options"></div>
+                </div>
+                <div class="combo-step">
+                    <h4>Step 3 — Roti / Rice (Multi-select)</h4>
+                    <div class="combo-options" id="bread-options"></div>
+                </div>
+                <div class="combo-total">
+                    <span class="label">Total</span>
+                    <span class="amount" id="combo-total">₹0</span>
+                </div>
+                <button class="btn-primary" style="width:100%; justify-content:center;" onclick="payCombo()">Pay with
+                    Razorpay</button>
+            </div>
+        </section>
+
+        <!-- Reviews -->
+        <section class="section">
+            <div style="text-align:center; margin-bottom: 40px;">
+                <span class="section-tag">⭐ Happy Customers</span>
+                <h2 class="section-title">What Our Food Family Says</h2>
+            </div>
+            <div class="reviews-grid" id="reviews-grid"></div>
+            <div style="text-align:center; margin-top: 32px;">
+                <button class="btn-ghost" style="color:var(--primary-dark); border-color:var(--gold-border);"
+                    onclick="window.open('https://g.co/kgs/example','_blank')">Read More Reviews on Google 📍</button>
+            </div>
+        </section>
+
+        <!-- Gallery -->
+        <section class="section" style="background: rgba(245,230,211,0.3);">
+            <div style="text-align:center; margin-bottom: 40px;">
+                <span class="section-tag">📸 From Our Kitchen</span>
+                <h2 class="section-title">Real Food, Real Love</h2>
+            </div>
+            <div class="gallery-grid" id="gallery-grid"></div>
+            <div style="text-align:center; margin-top: 32px;">
+                <button class="btn-ghost" style="color:var(--primary-dark); border-color:var(--gold-border);"
+                    onclick="window.open('https://instagram.com/apuskitchen','_blank')">Follow us @apuskitchen</button>
+            </div>
+        </section>
+
+        <!-- Festival -->
+        <section class="section">
+            <div style="text-align:center; margin-bottom: 40px;">
+                <span class="section-tag">🎉 Special Menus</span>
+                <h2 class="section-title">Celebrations Deserve Special Food</h2>
+            </div>
+            <div class="festival-grid" id="festival-grid"></div>
+        </section>
+
+        <!-- About -->
+        <section class="about-section">
+            <h2 class="section-title">Our Story</h2>
+            <p>What began as a small kitchen serving neighbours in a Mumbai suburb has grown into a beloved tiffin
+                service trusted by hundreds of families. We still cook the same way — small batches, fresh ingredients,
+                and recipes that remind you of home.</p>
+            <p>Every meal we prepare carries the warmth of a home kitchen and the reliability of a professional service.
+                Because we know that when you're far from home, a good meal can make all the difference.</p>
+            <div class="value-pills">
+                <span class="value-pill">🌿 Pure Ingredients</span>
+                <span class="value-pill">🔥 Fresh Daily</span>
+                <span class="value-pill">❤️ Made with Care</span>
+                <span class="value-pill">🚀 On-Time Delivery</span>
+                <span class="value-pill">💰 Pocket-Friendly</span>
+            </div>
+        </section>
+    </div>
+
+    <!-- PAGE: MENU -->
+    <div id="page-menu" class="page">
+        <div class="menu-hero">
+            <h1>What's Cooking Today?</h1>
+            <p>Order by 10 AM for Lunch · 5 PM for Dinner</p>
+        </div>
+        <section class="section">
+            <div class="filter-tabs" id="filter-tabs"></div>
+            <div class="menu-list" id="menu-list"></div>
+            <div class="menu-bottom-banner">
+                <h3>Ready to Order?</h3>
+                <p>Call us or drop a message — we'll confirm your tiffin in minutes.</p>
+                <button class="btn-primary" onclick="showPage('contact')">Contact Us</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- PAGE: CONTACT -->
+    <div id="page-contact" class="page">
+        <div class="contact-hero">
+            <h1>Get in Touch</h1>
+            <p>We'd love to hear from you. Order, feedback, or just say hi!</p>
+        </div>
+        <section class="section">
+            <div class="info-cards">
+                <div class="info-card">
+                    <div class="icon"><i class="fas fa-phone"></i></div>
+                    <h4>Phone / WhatsApp</h4>
+                    <p>+91 98765 43210</p>
+                </div>
+                <div class="info-card">
+                    <div class="icon"><i class="fas fa-envelope"></i></div>
+                    <h4>Email</h4>
+                    <p>hello@apuskitchen.com</p>
+                </div>
+                <div class="info-card">
+                    <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <h4>Location</h4>
+                    <p>Andheri West, Mumbai, Maharashtra</p>
+                </div>
+                <div class="info-card">
+                    <div class="icon"><i class="fas fa-clock"></i></div>
+                    <h4>Order Timings</h4>
+                    <p>Lunch by 10 AM · Dinner by 5 PM</p>
+                </div>
+            </div>
+            <div class="hours-card">
+                <h4>Kitchen Hours</h4>
+                <div class="hours-row"><span class="day">Monday – Friday</span><span>8 AM – 9 PM</span></div>
+                <div class="hours-row"><span class="day">Saturday</span><span>9 AM – 8 PM</span></div>
+                <div class="hours-row"><span class="day">Sunday</span><span>10 AM – 6 PM</span></div>
+            </div>
+            <div class="social-row">
+                <a href="https://instagram.com/apuskitchen" target="_blank" class="social-btn insta"><i
+                        class="fab fa-instagram"></i> Instagram</a>
+                <a href="https://facebook.com/apuskitchen" target="_blank" class="social-btn fb"><i
+                        class="fab fa-facebook-f"></i> Facebook</a>
+                <a href="https://wa.me/919876543210" target="_blank" class="social-btn wa"><i
+                        class="fab fa-whatsapp"></i> WhatsApp</a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // ===================== DATA =====================
+        const bestSellers = [
+            { name: "Full Tiffin", desc: "Dal + Sabzi + 4 Roti + Rice + Salad", price: 150, icon: "🍱", gradient: "linear-gradient(135deg, #E8B86D, #D4A017)", tags: ["⭐ #1", "💚 Veg", "Daily"] },
+            { name: "Paneer Masala", desc: "Soft paneer cubes in rich gravy", price: 110, icon: "🧈", gradient: "linear-gradient(135deg, #F5A623, #E89419)", tags: ["🔥 Hot", "💚 Veg", "Comfort"] },
+            { name: "Dal Makhani", desc: "Creamy black lentils slow-cooked", price: 100, icon: "🥣", gradient: "linear-gradient(135deg, #C8A876, #B8956A)", tags: ["💚 Veg", "Comfort", "Seasonal"] },
+            { name: "Chole Bhature", desc: "Spicy chickpeas with fluffy bhature", price: 120, icon: "🍛", gradient: "linear-gradient(135deg, #D4884A, #C07030)", tags: ["🔥 Hot", "💚 Veg", "Weekend"] },
+            { name: "Aloo Gobhi", desc: "Potato & cauliflower dry sabzi", price: 75, icon: "🥔", gradient: "linear-gradient(135deg, #A8C66C, #8FB050)", tags: ["💚 Veg", "Daily", "Light"] },
+            { name: "Khichdi", desc: "Rice & lentils comfort bowl with ghee", price: 90, icon: "🍚", gradient: "linear-gradient(135deg, #D4C4A8, #C0B090)", tags: ["💚 Veg", "Comfort", "Healthy"] },
+        ];
+
+        const reviews = [
+            { name: "Priya Sharma", loc: "Andheri West", stars: 5, text: "Finally found tiffin that tastes like my mom's cooking. The dal tadka is absolutely divine. Delivered hot and on time every single day!" },
+            { name: "Rahul Mehta", loc: "Jogeshwari", stars: 5, text: "Been ordering for 3 months now. The consistency is amazing — same great taste, same generous portions. Best value for money in Mumbai." },
+            { name: "Sneha Patel", loc: "Goregaon", stars: 4, text: "As a working professional, Apus Kitchen has been a lifesaver. Fresh, hygienic, and that homestyle flavour is unmatched. Highly recommend!" },
+            { name: "Amit Desai", loc: "Malad", stars: 5, text: "The festival thalis are a steal! Ordered the Navratri special and it was vrat-friendly yet so tasty. My whole family loved it." },
+        ];
+
+        const gallery = [
+            { name: "Dal Tadka", emoji: "🥣", gradient: "linear-gradient(135deg, #D4A017, #C09010)" },
+            { name: "Paneer Masala", emoji: "🧈", gradient: "linear-gradient(135deg, #F5A623, #E89419)" },
+            { name: "Fresh Rotis", emoji: "🫓", gradient: "linear-gradient(135deg, #E8C87A, #D8B86A)" },
+            { name: "Tiffin Box", emoji: "🍱", gradient: "linear-gradient(135deg, #B8A070, #A89060)" },
+            { name: "Khichdi", emoji: "🍚", gradient: "linear-gradient(135deg, #C8B898, #B8A888)" },
+            { name: "Mix Sabzi", emoji: "🥗", gradient: "linear-gradient(135deg, #A8C66C, #98B65C)" },
+        ];
+
+        const festivals = [
+            { name: "Navratri Special Thali", desc: "Vrat-friendly fasting thali with sabudana, rajgira & more", price: 180, emoji: "🪔", gradient: "linear-gradient(135deg, #D4884A, #C07030)" },
+            { name: "Sunday Special", desc: "Extra sabzi + dessert + papad — the works!", price: 200, emoji: "☀️", gradient: "linear-gradient(135deg, #F5A623, #E89419)" },
+            { name: "Birthday Combo", desc: "Full tiffin + sweet dish (kheer/gulab jamun)", price: 220, emoji: "🎂", gradient: "linear-gradient(135deg, #E07070, #C85858)" },
+            { name: "Eid/Festival Special", desc: "Rich shahi menu with biryani, korma & phirni", price: 250, emoji: "🌙", gradient: "linear-gradient(135deg, #8A7AB8, #6A5A98)" },
+        ];
+
+        const menuItems = [
+            { name: "Full Tiffin", desc: "Dal + Sabzi + 4 Roti + Rice + Salad", price: 150, cat: "tiffin", icon: "🍱", type: "veg" },
+            { name: "Half Tiffin", desc: "Dal + Sabzi + 2 Roti + Rice", price: 90, cat: "tiffin", icon: "🥡", type: "veg" },
+            { name: "Premium Thali", desc: "Dal Makhani + Paneer + 4 Roti + Rice + Raita + Sweet", price: 200, cat: "tiffin", icon: "🍽️", type: "veg" },
+            { name: "Dal Tadka", desc: "Yellow lentils tempered with garlic, cumin & ghee", price: 80, cat: "sabzi", icon: "🥣", type: "veg" },
+            { name: "Paneer Masala", desc: "Soft cottage cheese in rich tomato gravy", price: 110, cat: "sabzi", icon: "🧈", type: "veg" },
+            { name: "Aloo Gobhi", desc: "Potato & cauliflower dry sabzi", price: 75, cat: "sabzi", icon: "🥔", type: "veg" },
+            { name: "Chole", desc: "Spicy chickpeas in onion-tomato gravy", price: 90, cat: "sabzi", icon: "🍛", type: "veg" },
+            { name: "Mix Sabzi", desc: "Seasonal mixed vegetables", price: 75, cat: "sabzi", icon: "🥗", type: "veg" },
+            { name: "Jeera Rice", desc: "Fragrant basmati rice with cumin & ghee", price: 70, cat: "rice", icon: "🍚", type: "veg" },
+            { name: "Khichdi", desc: "Rice & lentils comfort bowl with ghee", price: 90, cat: "rice", icon: "🍲", type: "veg" },
+            { name: "Roti (4 pcs)", desc: "Fresh whole wheat rotis", price: 40, cat: "rice", icon: "🫓", type: "veg" },
+            { name: "Paratha (2 pcs)", desc: "Flaky layered parathas", price: 60, cat: "rice", icon: "🥞", type: "veg" },
+            { name: "Steamed Rice", desc: "Plain fluffy steamed rice", price: 50, cat: "rice", icon: "🍚", type: "veg" },
+            { name: "Poha", desc: "Flattened rice with peanuts & spices", price: 50, cat: "snacks", icon: "🥣", type: "veg" },
+            { name: "Upma", desc: "Semolina savoury breakfast", price: 55, cat: "snacks", icon: "🍲", type: "veg" },
+            { name: "Raita", desc: "Yogurt with cucumber & spices", price: 40, cat: "snacks", icon: "🥣", type: "veg" },
+        ];
+
+        const dalOptions = [
+            { name: "Dal Tadka", price: 80 },
+            { name: "Chole", price: 90 },
+            { name: "Dal Makhani", price: 100 },
+        ];
+
+        const sabziOptions = [
+            { name: "Aloo Gobhi", price: 75 },
+            { name: "Paneer Masala", price: 110 },
+            { name: "Mix Sabzi", price: 75 },
+        ];
+
+        const breadOptions = [
+            { name: "Roti x4", price: 40 },
+            { name: "Jeera Rice", price: 70 },
+            { name: "Paratha x2", price: 60 },
+        ];
+
+        // ===================== RENDER =====================
+        function renderBestSellers() {
+            const container = document.getElementById('best-sellers');
+            container.innerHTML = bestSellers.map(d => `
+        <div class="dish-card">
+          <div class="dish-card-top" style="background: ${d.gradient};">${d.icon}</div>
+          <div class="dish-card-body">
+            <h3>${d.name}</h3>
+            <p>${d.desc}</p>
+            <span class="price">₹${d.price}</span>
+            <div class="dish-tags">
+              ${d.tags.map(t => `<span class="dish-tag ${t.includes('Hot') ? 'hot' : ''} ${t.includes('Veg') ? 'veg' : ''}">${t}</span>`).join('')}
+            </div>
+            <button class="btn-small" onclick="openRazorpay(${d.price}, '${d.name}')">Order Now</button>
+          </div>
+        </div>
+      `).join('');
+        }
+
+        function renderReviews() {
+            const container = document.getElementById('reviews-grid');
+            container.innerHTML = reviews.map(r => `
+        <div class="review-card">
+          <div class="review-header">
+            <div class="review-avatar">${r.name.split(' ').map(n => n[0]).join('')}</div>
+            <div class="review-meta">
+              <h4>${r.name}</h4>
+              <div class="loc">${r.loc}</div>
+            </div>
+          </div>
+          <div class="review-stars">${'⭐'.repeat(r.stars)}</div>
+          <div class="review-text">${r.text}</div>
+          <div class="review-source">via Google Reviews</div>
+        </div>
+      `).join('');
+        }
+
+        function renderGallery() {
+            const container = document.getElementById('gallery-grid');
+            container.innerHTML = gallery.map(g => `
+        <div class="gallery-card" style="background: ${g.gradient};">
+          <div class="gallery-overlay"></div>
+          <div class="emoji">${g.emoji}</div>
+          <div class="gallery-caption">${g.name}</div>
+        </div>
+      `).join('');
+        }
+
+        function renderFestivals() {
+            const container = document.getElementById('festival-grid');
+            container.innerHTML = festivals.map(f => `
+        <div class="festival-card" style="background: ${f.gradient};">
+          <div class="emoji">${f.emoji}</div>
+          <h3>${f.name}</h3>
+          <p>${f.desc}</p>
+          <span class="price">₹${f.price}</span>
+          <button class="btn-small" onclick="openRazorpay(${f.price}, '${f.name}')">Pre-Order</button>
+        </div>
+      `).join('');
+        }
+
+        // ===================== COMBO BUILDER =====================
+        let comboState = { dal: null, sabzi: null, bread: [] };
+
+        function renderComboOptions() {
+            const dalContainer = document.getElementById('dal-options');
+            const sabziContainer = document.getElementById('sabzi-options');
+            const breadContainer = document.getElementById('bread-options');
+
+            dalContainer.innerHTML = dalOptions.map((opt, i) => `
+        <label class="combo-option ${comboState.dal === i ? 'selected' : ''}">
+          <input type="radio" name="dal" ${comboState.dal === i ? 'checked' : ''} onchange="setDal(${i})">
+          <span class="opt-name">${opt.name}</span>
+          <span class="opt-price">₹${opt.price}</span>
+        </label>
+      `).join('');
+
+            sabziContainer.innerHTML = sabziOptions.map((opt, i) => `
+        <label class="combo-option ${comboState.sabzi === i ? 'selected' : ''}">
+          <input type="radio" name="sabzi" ${comboState.sabzi === i ? 'checked' : ''} onchange="setSabzi(${i})">
+          <span class="opt-name">${opt.name}</span>
+          <span class="opt-price">₹${opt.price}</span>
+        </label>
+      `).join('');
+
+            breadContainer.innerHTML = breadOptions.map((opt, i) => `
+        <label class="combo-option ${comboState.bread.includes(i) ? 'selected' : ''}">
+          <input type="checkbox" ${comboState.bread.includes(i) ? 'checked' : ''} onchange="toggleBread(${i})">
+          <span class="opt-name">${opt.name}</span>
+          <span class="opt-price">₹${opt.price}</span>
+        </label>
+      `).join('');
+
+            updateComboTotal();
+        }
+
+        function setDal(i) { comboState.dal = i; renderComboOptions(); }
+        function setSabzi(i) { comboState.sabzi = i; renderComboOptions(); }
+        function toggleBread(i) {
+            if (comboState.bread.includes(i)) comboState.bread = comboState.bread.filter(b => b !== i);
+            else comboState.bread.push(i);
+            renderComboOptions();
+        }
+
+        function updateComboTotal() {
+            let total = 0;
+            if (comboState.dal !== null) total += dalOptions[comboState.dal].price;
+            if (comboState.sabzi !== null) total += sabziOptions[comboState.sabzi].price;
+            comboState.bread.forEach(i => total += breadOptions[i].price);
+            document.getElementById('combo-total').textContent = '₹' + total;
+            return total;
+        }
+
+        function payCombo() {
+            const total = updateComboTotal();
+            if (total === 0) { showToast('Please select at least one item', 'error'); return; }
+            openRazorpay(total, 'Custom Tiffin Combo');
+        }
+
+        // ===================== MENU PAGE =====================
+        let activeFilter = 'all';
+        const filters = [
+            { key: 'all', label: 'All Items' },
+            { key: 'tiffin', label: 'Tiffin Combos' },
+            { key: 'sabzi', label: 'Sabzi & Curry' },
+            { key: 'rice', label: 'Rice & Roti' },
+            { key: 'snacks', label: 'Snacks' },
+        ];
+
+        function renderFilterTabs() {
+            const container = document.getElementById('filter-tabs');
+            container.innerHTML = filters.map(f => `
+        <button class="filter-tab ${activeFilter === f.key ? 'active' : ''}" onclick="setFilter('${f.key}')">${f.label}</button>
+      `).join('');
+        }
+
+        function setFilter(key) { activeFilter = key; renderFilterTabs(); renderMenu(); }
+
+        function renderMenu() {
+            const container = document.getElementById('menu-list');
+            const items = activeFilter === 'all' ? menuItems : menuItems.filter(i => i.cat === activeFilter);
+            container.innerHTML = items.map(item => `
+        <div class="menu-item">
+          <div class="menu-icon-box ${item.type}">${item.icon}</div>
+          <div class="menu-dot ${item.type}"></div>
+          <div class="menu-info">
+            <h4>${item.name}</h4>
+            <p>${item.desc}</p>
+          </div>
+          <span class="menu-price">₹${item.price}</span>
+          <button class="btn-small" onclick="openRazorpay(${item.price}, '${item.name}')">Order</button>
+        </div>
+      `).join('');
+        }
+
+        // ===================== NAVIGATION =====================
+        function showPage(name) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + name).classList.add('active');
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+            const navLink = document.getElementById('nav-' + name);
+            if (navLink) navLink.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        // ===================== COUNTDOWN =====================
+        function updateCountdown() {
+            const now = new Date();
+            const targets = [10, 17]; // 10 AM and 5 PM
+            let nextHour = targets.find(h => h > now.getHours()) || targets[0] + 24;
+            let diff;
+            if (nextHour > 23) {
+                diff = ((24 - now.getHours()) + targets[0]) * 3600000 - now.getMinutes() * 60000 - now.getSeconds() * 1000;
+            } else {
+                diff = (nextHour - now.getHours()) * 3600000 - now.getMinutes() * 60000 - now.getSeconds() * 1000;
+            }
+            const hrs = Math.floor(diff / 3600000);
+            const mins = Math.floor((diff % 3600000) / 60000);
+            const secs = Math.floor((diff % 60000) / 1000);
+            document.getElementById('timer').textContent =
+                String(hrs).padStart(2, '0') + ':' + String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // ===================== RAZORPAY =====================
+        function openRazorpay(amount, description) {
+            // Replace with your actual Razorpay Key ID
+            const RAZORPAY_KEY = "rzp_test_XXXXXXXXXXXXXX"; // <-- REPLACE THIS
+
+            const options = {
+                key: RAZORPAY_KEY,
+                amount: amount * 100, // convert to paise
+                currency: "INR",
+                name: "Apus Kitchen",
+                description: description,
+                image: "",
+                handler: function (response) {
+                    showToast("🎉 Order placed! We'll call to confirm.", "success");
+                },
+                modal: {
+                    ondismiss: function () {
+                        // User closed the modal without paying
+                    }
+                },
+                prefill: {
+                    name: "",
+                    email: "",
+                    contact: ""
+                },
+                theme: {
+                    color: "#FF6B35"
+                }
+            };
+
+            try {
+                const rzp = new Razorpay(options);
+                rzp.on('payment.failed', function (response) {
+                    showToast("❌ Payment failed. Try again or call us.", "error");
+                });
+                rzp.open();
+            } catch (e) {
+                showToast("Razorpay not loaded. Please check your connection.", "error");
+            }
+        }
+
+        // ===================== TOAST =====================
+        function showToast(message, type) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 4000);
+        }
+
+        // ===================== INIT =====================
+        renderBestSellers();
+        renderReviews();
+        renderGallery();
+        renderFestivals();
+        renderFilterTabs();
+        renderMenu();
+        renderComboOptions();
+    </script>
+</body>
+
 </html>
