@@ -1,7 +1,7 @@
 from app.database.db import get_db_connection
 
 
-def place_order(user_id, items):
+def place_order(user_id, customer_name, items):
     """
     Place a new order for a user.
     `items` is a list of dicts: [{"menu_item_id": 1, "quantity": 2}, ...]
@@ -33,14 +33,14 @@ def place_order(user_id, items):
                 "unit_price": unit_price
             })
 
-        # Insert into orders table
+        # Insert into orders table with pending_payment status and customer_name
         cursor.execute(
             """
-            INSERT INTO orders (user_id, status, total_price)
-            VALUES (%s, 'pending', %s)
+            INSERT INTO orders (user_id, customer_name, status, total_price)
+            VALUES (%s, %s, 'pending_payment', %s)
             RETURNING id;
             """,
-            (user_id, total_price)
+            (user_id, customer_name, total_price)
         )
         order_id = cursor.fetchone()[0]
 
@@ -178,7 +178,7 @@ def get_all_orders():
 
 def update_order_status(order_id, new_status):
     """Admin: update the status of an order."""
-    VALID_STATUSES = {"pending", "confirmed", "preparing", "delivered", "cancelled"}
+    VALID_STATUSES = {"pending_payment", "payment_verified", "preparing", "delivered", "cancelled"}
     if new_status not in VALID_STATUSES:
         raise ValueError(f"Invalid status '{new_status}'. Must be one of: {', '.join(VALID_STATUSES)}")
 
@@ -200,3 +200,57 @@ def update_order_status(order_id, new_status):
     conn.close()
 
     return updated[0] if updated else None
+
+
+def generate_whatsapp_message(order_id):
+    """Generate WhatsApp message for an order with order details."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        # Get order details
+        cursor.execute(
+            """
+            SELECT o.id, o.customer_name, o.total_price, o.status
+            FROM orders o
+            WHERE o.id = %s;
+            """,
+            (order_id,)
+        )
+        order = cursor.fetchone()
+
+        if not order:
+            return None
+
+        order_id_db, customer_name, total_price, status = order
+
+        # Get order items with names
+        cursor.execute(
+            """
+            SELECT m.name, oi.quantity, oi.unit_price
+            FROM order_items oi
+            JOIN menu_items m ON oi.menu_item_id = m.id
+            WHERE oi.order_id = %s;
+            """,
+            (order_id,)
+        )
+        items = cursor.fetchall()
+
+        # Build message
+        message = f"Hello, I placed an order.\n\n"
+        message += f"Order ID: ORD{order_id_db}\n\n"
+        message += "Items:\n"
+
+        for idx, (name, quantity, unit_price) in enumerate(items, 1):
+            item_total = quantity * unit_price
+            message += f"{idx} {name} x{quantity} - ₹{item_total}\n"
+
+        message += f"\nTotal Amount: ₹{total_price}\n"
+        message += f"\nUPI ID: 8828683828@axl\n"
+        message += "\nI will complete payment now."
+
+        return message
+
+    finally:
+        cursor.close()
+        conn.close()

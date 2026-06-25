@@ -4,6 +4,24 @@ from app.services.auth_services import register_user, login_user
 
 auth_bp = Blueprint("auth", __name__)
 
+@auth_bp.route("/signup", methods=["POST"])
+def signup():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    name = data.get("name")
+    email = data.get("email")
+    password = data.get("password")
+
+    if not all([name, email, password]):
+        return jsonify({"error": "name, email, and password are required"}), 400
+
+    response, status = register_user(name, email, password, None)
+    return jsonify(response), status
+
+
 @auth_bp.route("/register", methods=["POST"])
 def register():
     data = request.get_json()

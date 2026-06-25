@@ -11,7 +11,6 @@
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
         :root {
             --bg: #FFF8F0;
@@ -1140,6 +1139,78 @@
             background: var(--danger);
         }
 
+        /* Cart Modal */
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--cream-dark);
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            color: var(--primary-dark);
+            display: block;
+        }
+
+        .cart-item-price {
+            color: var(--cta);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cart-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1.5px solid var(--gold-border);
+            background: var(--white);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .cart-btn:hover {
+            background: var(--accent);
+            color: var(--white);
+            border-color: var(--accent);
+        }
+
+        .cart-btn.remove {
+            background: var(--danger);
+            color: var(--white);
+            border-color: var(--danger);
+        }
+
+        .cart-btn.remove:hover {
+            background: #a93226;
+        }
+
+        .cart-quantity {
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+
         /* Responsive */
         @media (max-width: 900px) {
             .kitchen-grid {
@@ -1228,8 +1299,13 @@
             <li><a href="#" onclick="showPage('home'); return false;" id="nav-home" class="active">Home</a></li>
             <li><a href="#" onclick="showPage('menu'); return false;" id="nav-menu">Menu</a></li>
             <li><a href="#" onclick="showPage('contact'); return false;" id="nav-contact">Contact</a></li>
+            <li><a href="admin.html" id="nav-admin">Admin Login</a></li>
         </ul>
-        <button class="nav-cta" onclick="showPage('menu')">Order Now 🍽️</button>
+        <button class="nav-cta" onclick="toggleCart()">
+            <i class="fas fa-shopping-cart"></i>
+            <span style="margin-left:8px;">Order Now</span>
+            <span id="cart-count" style="display:none; background:var(--cta); color:white; border-radius:50%; width:20px; height:20px; font-size:0.75rem; display:flex; align-items:center; justify-content:center; margin-left:8px;">0</span>
+        </button>
         <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu"><i
                 class="fas fa-bars"></i></button>
     </nav>
@@ -1247,6 +1323,31 @@
 
     <!-- Toast Container -->
     <div class="toast-container" id="toast-container"></div>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:3000; align-items:center; justify-content:center;">
+        <div style="background:var(--white); border-radius:20px; padding:30px; max-width:500px; width:90%; max-height:80vh; overflow-y:auto; border:2px solid var(--gold-border);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2 style="font-family:'Playfair Display', serif; font-size:1.5rem; color:var(--primary-dark);">Your Cart</h2>
+                <button onclick="toggleCart()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--primary-dark);">×</button>
+            </div>
+            <div style="margin-bottom:20px;">
+                <label style="display:block; font-weight:600; margin-bottom:8px; color:var(--primary-dark);">Your Name</label>
+                <input type="text" id="customer-name-input" placeholder="Enter your name" style="width:100%; padding:12px 16px; border:1.5px solid var(--gold-border); border-radius:12px; font-size:1rem; box-sizing:border-box;">
+            </div>
+            <div id="cart-items" style="margin-bottom:20px;"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding-top:20px; border-top:2px solid var(--gold-border); margin-bottom:20px;">
+                <span style="font-weight:600; font-size:1.1rem;">Total</span>
+                <span id="cart-total" style="font-size:1.6rem; color:var(--cta); font-weight:700; font-family:'Playfair Display', serif;">₹0</span>
+            </div>
+            <button 
+    class="btn-primary" 
+    style="width:100%; justify-content:center; color:#B65A1D;"
+    onclick="placeOrder()">
+    Place Order 🍽️
+</button>
+        </div>
+    </div>
 
     <!-- PAGE: HOME -->
     <div id="page-home" class="page active">
@@ -1367,8 +1468,7 @@
                     <span class="label">Total</span>
                     <span class="amount" id="combo-total">₹0</span>
                 </div>
-                <button class="btn-primary" style="width:100%; justify-content:center;" onclick="payCombo()">Pay with
-                    Razorpay</button>
+                <button class="btn-primary" style="width:100%; justify-content:center;" onclick="payCombo()">Add to Cart</button>
             </div>
         </section>
 
@@ -1572,7 +1672,7 @@
             <div class="dish-tags">
               ${d.tags.map(t => `<span class="dish-tag ${t.includes('Hot') ? 'hot' : ''} ${t.includes('Veg') ? 'veg' : ''}">${t}</span>`).join('')}
             </div>
-            <button class="btn-small" onclick="openRazorpay(${d.price}, '${d.name}')">Order Now</button>
+            <button class="btn-small" onclick="addToCart({name: '${d.name}', price: ${d.price}, icon: '${d.icon}'})">Add to Cart</button>
           </div>
         </div>
       `).join('');
@@ -1615,7 +1715,7 @@
           <h3>${f.name}</h3>
           <p>${f.desc}</p>
           <span class="price">₹${f.price}</span>
-          <button class="btn-small" onclick="openRazorpay(${f.price}, '${f.name}')">Pre-Order</button>
+          <button class="btn-small" onclick="addToCart({name: '${f.name}', price: ${f.price}, icon: '${f.emoji}'})">Add to Cart</button>
         </div>
       `).join('');
         }
@@ -1675,7 +1775,15 @@
         function payCombo() {
             const total = updateComboTotal();
             if (total === 0) { showToast('Please select at least one item', 'error'); return; }
-            openRazorpay(total, 'Custom Tiffin Combo');
+            
+            // Build combo name
+            let comboName = 'Custom Tiffin Combo: ';
+            if (comboState.dal !== null) comboName += dalOptions[comboState.dal].name + ' + ';
+            if (comboState.sabzi !== null) comboName += sabziOptions[comboState.sabzi].name + ' + ';
+            comboState.bread.forEach(i => comboName += breadOptions[i].name + ', ');
+            comboName = comboName.slice(0, -2); // Remove last comma/space
+            
+            addToCart({name: comboName, price: total, icon: '🍱'});
         }
 
         // ===================== MENU PAGE =====================
@@ -1709,7 +1817,7 @@
             <p>${item.desc}</p>
           </div>
           <span class="menu-price">₹${item.price}</span>
-          <button class="btn-small" onclick="openRazorpay(${item.price}, '${item.name}')">Order</button>
+          <button class="btn-small" onclick="addToCart({name: '${item.name}', price: ${item.price}, icon: '${item.icon}'})">Add to Cart</button>
         </div>
       `).join('');
         }
@@ -1750,44 +1858,147 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // ===================== RAZORPAY =====================
-        function openRazorpay(amount, description) {
-            // Replace with your actual Razorpay Key ID
-            const RAZORPAY_KEY = "rzp_test_XXXXXXXXXXXXXX"; // <-- REPLACE THIS
+        // ===================== CART =====================
+        let cart = [];
 
-            const options = {
-                key: RAZORPAY_KEY,
-                amount: amount * 100, // convert to paise
-                currency: "INR",
-                name: "Apus Kitchen",
-                description: description,
-                image: "",
-                handler: function (response) {
-                    showToast("🎉 Order placed! We'll call to confirm.", "success");
-                },
-                modal: {
-                    ondismiss: function () {
-                        // User closed the modal without paying
-                    }
-                },
-                prefill: {
-                    name: "",
-                    email: "",
-                    contact: ""
-                },
-                theme: {
-                    color: "#FF6B35"
-                }
-            };
+        function addToCart(item) {
+            const existingItem = cart.find(c => c.name === item.name);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+            updateCartUI();
+            showToast(`Added ${item.name} to cart`, 'success');
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartCount = document.getElementById('cart-count');
+            const cartTotal = document.getElementById('cart-total');
+            const cartItems = document.getElementById('cart-items');
+
+            if (cartCount) {
+                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                cartCount.textContent = totalItems;
+                cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+            }
+
+            if (cartItems) {
+                cartItems.innerHTML = cart.map((item, index) => `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <span class="cart-item-name">${item.name}</span>
+                            <span class="cart-item-price">₹${item.price * item.quantity}</span>
+                        </div>
+                        <div class="cart-item-controls">
+                            <button class="cart-btn" onclick="decreaseQuantity(${index})">-</button>
+                            <span class="cart-quantity">${item.quantity}</span>
+                            <button class="cart-btn" onclick="increaseQuantity(${index})">+</button>
+                            <button class="cart-btn remove" onclick="removeFromCart(${index})">×</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            if (cartTotal) {
+                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                cartTotal.textContent = '₹' + total;
+            }
+        }
+
+        function increaseQuantity(index) {
+            cart[index].quantity += 1;
+            updateCartUI();
+        }
+
+        function decreaseQuantity(index) {
+            if (cart[index].quantity > 1) {
+                cart[index].quantity -= 1;
+            } else {
+                removeFromCart(index);
+            }
+            updateCartUI();
+        }
+
+        function toggleCart() {
+            const cartModal = document.getElementById('cart-modal');
+            cartModal.style.display = cartModal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        async function placeOrder() {
+            if (cart.length === 0) {
+                showToast('Your cart is empty', 'error');
+                return;
+            }
+
+            const customerName = document.getElementById('customer-name-input').value;
+            if (!customerName || !customerName.trim()) {
+                showToast('Please enter your name', 'error');
+                document.getElementById('customer-name-input').focus();
+                return;
+            }
+
+            // Convert cart items to API format (using placeholder menu_item_id)
+            const items = cart.map((item, index) => ({
+                menu_item_id: index + 1, // Placeholder - will need actual menu_item_id mapping
+                quantity: item.quantity
+            }));
 
             try {
-                const rzp = new Razorpay(options);
-                rzp.on('payment.failed', function (response) {
-                    showToast("❌ Payment failed. Try again or call us.", "error");
+                // Create order without auth (guest checkout)
+                const headers = { 'Content-Type': 'application/json' };
+                const token = localStorage.getItem('token');
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+
+                const response = await fetch('http://localhost:5000/orders/', {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({
+                        customer_name: customerName,
+                        items: items
+                    })
                 });
-                rzp.open();
-            } catch (e) {
-                showToast("Razorpay not loaded. Please check your connection.", "error");
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Get WhatsApp message
+                    const whatsappHeaders = {};
+                    if (token) {
+                        whatsappHeaders['Authorization'] = `Bearer ${token}`;
+                    }
+
+                    const whatsappResponse = await fetch(`http://localhost:5000/orders/${data.order_id}/whatsapp`, {
+                        headers: whatsappHeaders
+                    });
+
+                    const whatsappData = await whatsappResponse.json();
+
+                    if (whatsappResponse.ok) {
+                        // Clear cart and redirect to WhatsApp
+                        cart = [];
+                        updateCartUI();
+                        toggleCart();
+                        // Clear name input
+                        document.getElementById('customer-name-input').value = '';
+                        window.open(whatsappData.whatsapp_url, '_blank');
+                        showToast('Order placed! Redirecting to WhatsApp...', 'success');
+                    } else {
+                        showToast('Order placed but failed to generate WhatsApp link', 'error');
+                    }
+                } else {
+                    showToast(data.error || 'Failed to place order', 'error');
+                }
+            } catch (error) {
+                showToast('Error placing order. Please try again.', 'error');
+                console.error(error);
             }
         }
 

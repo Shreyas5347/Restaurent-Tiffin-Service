@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Apus Kitchen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg: #FFF8F0;
+            --primary-dark: #1A0A00;
+            --accent: #F5A623;
+            --cta: #FF6B35;
+            --danger: #C0392B;
+            --gold-border: #F0C88A;
+            --white: #FFFFFF;
+            --cream-dark: #F5E6D3;
+            --green: #27AE60;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--primary-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+
+        /* Login Container */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2D1810 0%, #1A0A00 100%);
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+            border: 2px solid var(--gold-border);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header .logo {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .login-header h1 {
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: #5A4A3A;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary-dark);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid var(--gold-border);
+            border-radius: 12px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .btn-primary {
+            background: var(--cta);
+            color: var(--white);
+            padding: 14px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.35);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Admin Dashboard */
+        .admin-dashboard {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: var(--primary-dark);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .navbar-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--cream-dark);
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1.5px solid rgba(245, 166, 35, 0.3);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(245, 166, 35, 0.4);
+        }
+
+        .dashboard-content {
+            padding: 40px 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--primary-dark);
+            margin-bottom: 30px;
+        }
+
+        .orders-table {
+            width: 100%;
+            background: var(--white);
+            border-radius: 16px;
+            border: 1.5px solid var(--gold-border);
+            overflow: hidden;
+        }
+
+        .orders-table th,
+        .orders-table td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--cream-dark);
+        }
+
+        .orders-table th {
+            background: rgba(245, 166, 35, 0.1);
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .orders-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-pending_payment {
+            background: rgba(245, 166, 35, 0.15);
+            color: #D4940A;
+        }
+
+        .status-payment_verified {
+            background: rgba(39, 174, 96, 0.15);
+            color: var(--green);
+        }
+
+        .status-preparing {
+            background: rgba(52, 152, 219, 0.15);
+            color: #3498DB;
+        }
+
+        .status-delivered {
+            background: rgba(39, 174, 96, 0.15);
+            color: var(--green);
+        }
+
+        .status-cancelled {
+            background: rgba(192, 57, 43, 0.15);
+            color: var(--danger);
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-right: 8px;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-verify {
+            background: var(--green);
+            color: var(--white);
+        }
+
+        .btn-prepare {
+            background: #3498DB;
+            color: var(--white);
+        }
+
+        .btn-deliver {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        .btn-cancel {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 14px 22px;
+            border-radius: 12px;
+            color: var(--white);
+            font-weight: 500;
+            font-size: 0.95rem;
+            animation: toastIn 0.3s ease;
+            z-index: 3000;
+        }
+
+        .toast.success {
+            background: var(--green);
+        }
+
+        .toast.error {
+            background: var(--danger);
+        }
+
+        @keyframes toastIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Login Section -->
+    <div class="login-container" id="login-section">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo">🍛</div>
+                <h1>Admin Panel</h1>
+                <p>Apus Kitchen - Order Management</p>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="admin-email" placeholder="admin@apuskitchen.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="admin-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login as Admin
+                </button>
+            </form>
+            <div class="back-link">
+                <a href="index.html">← Back to Website</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div class="admin-dashboard" id="dashboard-section">
+        <nav class="navbar">
+            <a href="#" class="navbar-brand">🍛 Apus Kitchen Admin</a>
+            <div class="navbar-actions">
+                <button class="btn-ghost" onclick="loadOrders()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+                <button class="btn-ghost" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </nav>
+
+        <div class="dashboard-content">
+            <h2 class="section-title">Orders Management</h2>
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-body">
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #5A4A3A;">Loading orders...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script>
+        let adminToken = localStorage.getItem('adminToken');
+
+        // Check if already logged in
+        if (adminToken) {
+            showDashboard();
+        }
+
+        // Login form handler
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-password').value;
+
+            try {
+                const response = await fetch('http://localhost:5000/auth/admin-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    adminToken = data.token;
+                    localStorage.setItem('adminToken', adminToken);
+                    showToast('Login successful!', 'success');
+                    showDashboard();
+                } else {
+                    showToast(data.error || 'Login failed', 'error');
+                }
+            } catch (error) {
+                showToast('Error connecting to server', 'error');
+                console.error(error);
+            }
+        });
+
+        function showDashboard() {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('dashboard-section').style.display = 'block';
+            loadOrders();
+        }
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            adminToken = null;
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('login-section').style.display = 'flex';
+            showToast('Logged out successfully', 'success');
+        }
+
+        async function loadOrders() {
+            try {
+                const response = await fetch('http://localhost:5000/orders/', {
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    renderOrders(data);
+                } else {
+                    showToast('Failed to load orders', 'error');
+                }
+            } catch (error) {
+                showToast('Error loading orders', 'error');
+                console.error(error);
+            }
+        }
+
+        function renderOrders(orders) {
+            const tbody = document.getElementById('orders-body');
+            
+            if (orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #5A4A3A;">No orders yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = orders.map(order => `
+                <tr>
+                    <td>#${order.id}</td>
+                    <td>${order.customer_name || 'Guest'}</td>
+                    <td>${order.items ? order.items.length + ' items' : '-'}</td>
+                    <td>₹${order.total_price}</td>
+                    <td><span class="status-badge status-${order.status}">${order.status.replace('_', ' ')}</span></td>
+                    <td>
+                        ${getActionButtons(order)}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getActionButtons(order) {
+            const buttons = [];
+
+            if (order.status === 'pending_payment') {
+                buttons.push(`<button class="action-btn btn-verify" onclick="updateStatus(${order.id}, 'payment_verified')">Verify Payment</button>`);
+                buttons.push(`<button class="action-btn btn-cancel" onclick="updateStatus(${order.id}, 'cancelled')">Cancel</button>`);
+            } else if (order.status === 'payment_verified') {
+                buttons.push(`<button class="action-btn btn-prepare" onclick="updateStatus(${order.id}, 'preparing')">Start Preparing</button>`);
+                buttons.push(`<button class="action-btn btn-cancel" onclick="updateStatus(${order.id}, 'cancelled')">Cancel</button>`);
+            } else if (order.status === 'preparing') {
+                buttons.push(`<button class="action-btn btn-deliver" onclick="updateStatus(${order.id}, 'delivered')">Mark Delivered</button>`);
+            }
+
+            return buttons.join('');
+        }
+
+        async function updateStatus(orderId, newStatus) {
+            try {
+                const response = await fetch(`http://localhost:5000/orders/${orderId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${adminToken}`
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showToast(data.message, 'success');
+                    loadOrders();
+                } else {
+                    showToast(data.error || 'Failed to update status', 'error');
+                }
+            } catch (error) {
+                showToast('Error updating status', 'error');
+                console.error(error);
+            }
+        }
+
+        function showToast(message, type) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 4000);
+        }
+    </script>
+</body>
+
+</html>
