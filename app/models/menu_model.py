@@ -1,16 +1,16 @@
 from app.database.db import get_db_connection
 
-def add_menu_item(name, description, price, category="Uncategorized"):
+def add_menu_item(name, description, price, category="Uncategorized", available=True):
     conn = get_db_connection()
     cursor = conn.cursor()
 
     query = """
-    INSERT INTO menu_items (name, description, price, category)
-    VALUES (%s, %s, %s, %s)
+    INSERT INTO menu_items (name, description, price, category, available)
+    VALUES (%s, %s, %s, %s, %s)
     RETURNING id;
     """
 
-    cursor.execute(query, (name, description, price, category))
+    cursor.execute(query, (name, description, price, category, available))
     item_id = cursor.fetchone()[0]
 
     conn.commit()
@@ -23,9 +23,9 @@ def get_all_menu_items():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    query = "SELECT id, name, description, price, category, created_at FROM menu_items;"
+    query = "SELECT id, name, description, price, category, available, created_at FROM menu_items;"
     cursor.execute(query)
-    
+
     # fetchall returns a list of tuples
     items = cursor.fetchall()
 
@@ -40,23 +40,33 @@ def get_all_menu_items():
             "description": row[2],
             "price": float(row[3]),
             "category": row[4],
-            "created_at": row[5]
+            "available": row[5],
+            "created_at": row[6]
         }
         for row in items
     ]
 
-def update_menu_item(item_id, name, description, price, category):
+def update_menu_item(item_id, name, description, price, category, available=None):
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    query = """
-    UPDATE menu_items
-    SET name = %s, description = %s, price = %s, category = %s
-    WHERE id = %s
-    RETURNING id;
-    """
+    if available is not None:
+        query = """
+        UPDATE menu_items
+        SET name = %s, description = %s, price = %s, category = %s, available = %s
+        WHERE id = %s
+        RETURNING id;
+        """
+        cursor.execute(query, (name, description, price, category, available, item_id))
+    else:
+        query = """
+        UPDATE menu_items
+        SET name = %s, description = %s, price = %s, category = %s
+        WHERE id = %s
+        RETURNING id;
+        """
+        cursor.execute(query, (name, description, price, category, item_id))
 
-    cursor.execute(query, (name, description, price, category, item_id))
     updated_id = cursor.fetchone()
 
     conn.commit()

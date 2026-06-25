@@ -19,12 +19,13 @@ def create_menu_item(user_id, role):
     description = data.get("description", "")
     price = data.get("price")
     category = data.get("category", "Uncategorized")
+    available = data.get("available", True)
 
     if not name or price is None:
         return jsonify({"error": "Name and price are required"}), 400
 
     try:
-        item_id = add_menu_item(name, description, price, category)
+        item_id = add_menu_item(name, description, price, category, available)
         return jsonify({
             "message": "Menu item added successfully",
             "item_id": item_id
@@ -59,12 +60,13 @@ def update_menu_item_route(user_id, role, item_id):
     description = data.get("description", "")
     price = data.get("price")
     category = data.get("category", "Uncategorized")
+    available = data.get("available")
 
     if not name or price is None:
         return jsonify({"error": "Name and price are required"}), 400
 
     try:
-        updated_id = update_menu_item(item_id, name, description, price, category)
+        updated_id = update_menu_item(item_id, name, description, price, category, available)
         if updated_id:
             return jsonify({
                 "message": "Menu item updated successfully",

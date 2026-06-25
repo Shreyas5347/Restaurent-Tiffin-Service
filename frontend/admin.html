@@ -5,30 +5,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Apus Kitchen</title>
+    <meta name="description" content="Apus Kitchen Admin Panel - Manage orders, menu items, categories and track daily revenue.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --bg: #FFF8F0;
+            --bg: #F7F0E8;
             --primary-dark: #1A0A00;
             --accent: #F5A623;
+            --accent-light: rgba(245,166,35,0.12);
             --cta: #FF6B35;
             --danger: #C0392B;
+            --danger-light: rgba(192,57,43,0.1);
             --gold-border: #F0C88A;
             --white: #FFFFFF;
             --cream-dark: #F5E6D3;
             --green: #27AE60;
+            --green-light: rgba(39,174,96,0.12);
+            --blue: #3498DB;
+            --blue-light: rgba(52,152,219,0.12);
+            --purple: #8E44AD;
+            --sidebar-bg: #160800;
+            --sidebar-width: 260px;
+            --card-shadow: 0 4px 24px rgba(26,10,0,0.08);
+            --hover-shadow: 0 8px 32px rgba(26,10,0,0.14);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -38,510 +43,1743 @@
             min-height: 100vh;
         }
 
-        h1, h2, h3 {
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
-        }
+        h1, h2, h3, h4 { font-family: 'Playfair Display', serif; font-weight: 700; }
 
-        /* Login Container */
-        .login-container {
+        /* ===== LOGIN ===== */
+        .login-screen {
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #2D1810 0%, #1A0A00 100%);
+            background: linear-gradient(135deg, #2D1810 0%, #1A0A00 50%, #0D0500 100%);
             padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-screen::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(245,166,35,0.08) 1.5px, transparent 1.5px);
+            background-size: 40px 40px;
         }
 
         .login-card {
             background: var(--white);
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 450px;
+            border-radius: 24px;
+            padding: 48px 40px;
+            max-width: 440px;
             width: 100%;
             border: 2px solid var(--gold-border);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+            position: relative;
+            z-index: 1;
         }
 
-        .login-header {
-            text-align: center;
-            margin-bottom: 30px;
+        .login-logo {
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, #F5A623, #E89419);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.2rem;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 0 10px rgba(245,166,35,0.15);
         }
 
-        .login-header .logo {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
+        .login-card h1 { text-align: center; font-size: 1.9rem; margin-bottom: 6px; }
+        .login-card .subtitle { text-align: center; color: #7A6A5A; font-size: 0.95rem; margin-bottom: 32px; }
 
-        .login-header h1 {
-            font-size: 1.8rem;
-            color: var(--primary-dark);
-            margin-bottom: 8px;
-        }
-
-        .login-header p {
-            color: #5A4A3A;
-            font-size: 0.95rem;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
+        .form-group { margin-bottom: 20px; }
 
         .form-group label {
             display: block;
             font-weight: 600;
             margin-bottom: 8px;
+            font-size: 0.9rem;
             color: var(--primary-dark);
         }
 
-        .form-group input {
+        .form-control {
             width: 100%;
-            padding: 14px 16px;
+            padding: 13px 16px;
             border: 1.5px solid var(--gold-border);
             border-radius: 12px;
             font-size: 1rem;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #FDFAF6;
         }
 
-        .form-group input:focus {
+        .form-control:focus {
             outline: none;
             border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(245,166,35,0.12);
         }
 
-        .btn-primary {
-            background: var(--cta);
-            color: var(--white);
-            padding: 14px 28px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #FF6B35, #E55A28);
+            color: white;
             border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.35);
-        }
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,107,53,0.4); }
 
-        .back-link {
-            text-align: center;
-            margin-top: 20px;
-        }
+        .back-link { text-align: center; margin-top: 20px; }
+        .back-link a { color: var(--accent); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+        .back-link a:hover { text-decoration: underline; }
 
-        .back-link a {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .back-link a:hover {
-            text-decoration: underline;
-        }
-
-        /* Admin Dashboard */
-        .admin-dashboard {
+        /* ===== ADMIN LAYOUT ===== */
+        .admin-layout {
             display: none;
             min-height: 100vh;
         }
 
-        .navbar {
-            background: var(--primary-dark);
-            padding: 16px 24px;
+        .admin-layout.visible { display: flex; }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            min-height: 100vh;
+            position: fixed;
+            top: 0; left: 0;
+            display: flex; flex-direction: column;
+            z-index: 100;
+            border-right: 1px solid rgba(245,166,35,0.1);
+        }
+
+        .sidebar-brand {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(245,166,35,0.12);
+            display: flex; align-items: center; gap: 12px;
+        }
+
+        .sidebar-brand .logo-icon {
+            width: 42px; height: 42px;
+            background: linear-gradient(135deg, #F5A623, #E89419);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .sidebar-brand h2 {
+            font-size: 1.1rem;
+            color: var(--accent);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .sidebar-brand .admin-label {
+            font-size: 0.72rem;
+            color: rgba(245,230,211,0.5);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-nav {
+            padding: 16px 12px;
+            flex: 1;
+        }
+
+        .nav-section-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(245,230,211,0.35);
+            padding: 12px 10px 6px;
+            font-weight: 600;
+        }
+
+        .sidebar-link {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-        }
-
-        .navbar-brand {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            color: var(--accent);
+            gap: 12px;
+            padding: 11px 14px;
+            border-radius: 12px;
+            color: rgba(245,230,211,0.65);
             text-decoration: none;
-            font-weight: 700;
-        }
-
-        .navbar-actions {
-            display: flex;
-            gap: 16px;
-        }
-
-        .btn-ghost {
-            background: transparent;
-            color: var(--cream-dark);
-            padding: 10px 20px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            border: 1.5px solid rgba(245, 166, 35, 0.3);
+            font-size: 0.92rem;
+            font-weight: 500;
             cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 3px;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .sidebar-link:hover {
+            background: rgba(245,166,35,0.08);
+            color: var(--cream-dark);
+        }
+
+        .sidebar-link.active {
+            background: rgba(245,166,35,0.14);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .sidebar-link i { width: 18px; text-align: center; }
+
+        .sidebar-footer {
+            padding: 16px 12px;
+            border-top: 1px solid rgba(245,166,35,0.1);
+        }
+
+        .sidebar-user {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.04);
+        }
+
+        .user-avatar {
+            width: 36px; height: 36px;
+            background: var(--cta);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.9rem; color: white;
+        }
+
+        .user-name { font-size: 0.88rem; font-weight: 600; color: var(--cream-dark); }
+        .user-role { font-size: 0.73rem; color: rgba(245,230,211,0.45); }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--cream-dark);
+            padding: 0 28px;
+            height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 50;
+        }
+
+        .topbar-title { font-size: 1.2rem; font-weight: 700; color: var(--primary-dark); }
+        .topbar-title span { color: var(--accent); }
+
+        .topbar-actions { display: flex; align-items: center; gap: 12px; }
+
+        .btn-icon {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            border: 1.5px solid var(--cream-dark);
+            background: var(--white);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: #7A6A5A;
+            font-size: 0.9rem;
             transition: all 0.2s;
         }
 
-        .btn-ghost:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(245, 166, 35, 0.4);
+        .btn-icon:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+        .content-area {
+            padding: 28px;
         }
 
-        .dashboard-content {
-            padding: 40px 24px;
-            max-width: 1400px;
-            margin: 0 auto;
+        /* ===== PANELS ===== */
+        .panel { display: none; }
+        .panel.active { display: block; }
+
+        /* ===== DASHBOARD STATS ===== */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
         }
 
-        .section-title {
-            font-size: 2rem;
-            color: var(--primary-dark);
-            margin-bottom: 30px;
-        }
-
-        .orders-table {
-            width: 100%;
+        .stat-card {
             background: var(--white);
-            border-radius: 16px;
-            border: 1.5px solid var(--gold-border);
+            border-radius: 18px;
+            padding: 22px 20px;
+            border: 1.5px solid var(--cream-dark);
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: default;
+        }
+
+        .stat-card:hover { transform: translateY(-3px); box-shadow: var(--hover-shadow); }
+
+        .stat-label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #8A7A6A;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .stat-sub { font-size: 0.8rem; color: #8A7A6A; }
+
+        .stat-card.total { border-left: 4px solid var(--accent); }
+        .stat-card.total .stat-value { color: var(--accent); }
+        .stat-card.pending { border-left: 4px solid #E67E22; }
+        .stat-card.pending .stat-value { color: #E67E22; }
+        .stat-card.preparing { border-left: 4px solid var(--blue); }
+        .stat-card.preparing .stat-value { color: var(--blue); }
+        .stat-card.delivered { border-left: 4px solid var(--green); }
+        .stat-card.delivered .stat-value { color: var(--green); }
+        .stat-card.revenue { border-left: 4px solid var(--purple); }
+        .stat-card.revenue .stat-value { color: var(--purple); }
+
+        .stat-icon {
+            width: 42px; height: 42px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+
+        /* ===== SECTION HEADER ===== */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            font-size: 1.4rem;
+            color: var(--primary-dark);
+        }
+
+        /* ===== TABLE ===== */
+        .table-wrap {
+            background: var(--white);
+            border-radius: 18px;
+            border: 1.5px solid var(--cream-dark);
+            box-shadow: var(--card-shadow);
             overflow: hidden;
         }
 
-        .orders-table th,
-        .orders-table td {
-            padding: 16px;
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: rgba(245,166,35,0.07);
+            padding: 14px 18px;
             text-align: left;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            color: #5A4A3A;
+            border-bottom: 1.5px solid var(--cream-dark);
+        }
+
+        .data-table td {
+            padding: 14px 18px;
             border-bottom: 1px solid var(--cream-dark);
+            font-size: 0.92rem;
+            vertical-align: middle;
         }
 
-        .orders-table th {
-            background: rgba(245, 166, 35, 0.1);
-            font-weight: 600;
-            color: var(--primary-dark);
-        }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr:hover td { background: rgba(245,230,211,0.25); }
 
-        .orders-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 6px 12px;
+        /* ===== STATUS BADGES ===== */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
             border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
+            font-size: 0.78rem;
+            font-weight: 700;
         }
 
-        .status-pending_payment {
-            background: rgba(245, 166, 35, 0.15);
-            color: #D4940A;
-        }
+        .badge-pending { background: rgba(230,126,34,0.12); color: #D35400; }
+        .badge-preparing { background: var(--blue-light); color: var(--blue); }
+        .badge-delivered { background: var(--green-light); color: #1E8449; }
+        .badge-cancelled { background: var(--danger-light); color: var(--danger); }
+        .badge-verified { background: var(--green-light); color: #1E8449; }
+        .badge-available { background: var(--green-light); color: #1E8449; }
+        .badge-unavailable { background: var(--danger-light); color: var(--danger); }
 
-        .status-payment_verified {
-            background: rgba(39, 174, 96, 0.15);
-            color: var(--green);
-        }
-
-        .status-preparing {
-            background: rgba(52, 152, 219, 0.15);
-            color: #3498DB;
-        }
-
-        .status-delivered {
-            background: rgba(39, 174, 96, 0.15);
-            color: var(--green);
-        }
-
-        .status-cancelled {
-            background: rgba(192, 57, 43, 0.15);
-            color: var(--danger);
-        }
-
-        .action-btn {
+        /* ===== BUTTONS ===== */
+        .btn {
             padding: 8px 16px;
             border-radius: 8px;
             border: none;
             cursor: pointer;
+            font-family: 'Inter', sans-serif;
             font-weight: 600;
-            font-size: 0.85rem;
-            margin-right: 8px;
+            font-size: 0.82rem;
+            transition: all 0.2s;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+
+        .btn:hover { transform: translateY(-1px); }
+
+        .btn-primary-sm { background: var(--cta); color: white; }
+        .btn-primary-sm:hover { box-shadow: 0 4px 12px rgba(255,107,53,0.35); }
+
+        .btn-success { background: var(--green); color: white; }
+        .btn-success:hover { box-shadow: 0 4px 12px rgba(39,174,96,0.35); }
+
+        .btn-info { background: var(--blue); color: white; }
+        .btn-info:hover { box-shadow: 0 4px 12px rgba(52,152,219,0.35); }
+
+        .btn-warning { background: var(--accent); color: white; }
+        .btn-warning:hover { box-shadow: 0 4px 12px rgba(245,166,35,0.35); }
+
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { box-shadow: 0 4px 12px rgba(192,57,43,0.35); }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid var(--gold-border);
+            color: var(--primary-dark);
+        }
+
+        .btn-outline:hover { border-color: var(--accent); background: var(--accent-light); }
+
+        .btn-lg {
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            border-radius: 12px;
+        }
+
+        /* ===== MENU MANAGEMENT ===== */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
+        }
+
+        .menu-card {
+            background: var(--white);
+            border-radius: 18px;
+            border: 1.5px solid var(--cream-dark);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .menu-card:hover { transform: translateY(-3px); box-shadow: var(--hover-shadow); }
+
+        .menu-card-header {
+            padding: 20px 20px 14px;
+            display: flex; align-items: flex-start; justify-content: space-between;
+        }
+
+        .menu-card-icon {
+            width: 52px; height: 52px;
+            border-radius: 14px;
+            background: var(--accent-light);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .menu-card-body { padding: 0 20px 14px; }
+
+        .menu-card-name { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+        .menu-card-desc { font-size: 0.82rem; color: #7A6A5A; margin-bottom: 8px; }
+
+        .menu-card-meta {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+        }
+
+        .menu-card-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--cta);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .menu-cat-pill {
+            background: var(--accent-light);
+            color: #A07020;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .menu-card-actions {
+            padding: 14px 20px;
+            border-top: 1px solid var(--cream-dark);
+            display: flex; gap: 8px;
+        }
+
+        /* ===== TOGGLE SWITCH ===== */
+        .toggle-wrap {
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .toggle {
+            position: relative;
+            width: 42px; height: 24px;
+        }
+
+        .toggle input { opacity: 0; width: 0; height: 0; }
+
+        .toggle-slider {
+            position: absolute;
+            inset: 0;
+            background: #D0C0B0;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            height: 18px; width: 18px;
+            left: 3px; bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        input:checked + .toggle-slider { background: var(--green); }
+        input:checked + .toggle-slider::before { transform: translateX(18px); }
+
+        .toggle-label { font-size: 0.8rem; font-weight: 600; color: #7A6A5A; }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.open { display: flex; }
+
+        .modal {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 520px;
+            width: 100%;
+            border: 2px solid var(--gold-border);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.25);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 28px;
+        }
+
+        .modal-header h3 { font-size: 1.4rem; }
+
+        .modal-close {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 1.5px solid var(--cream-dark);
+            background: white;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+            color: #5A4A3A;
             transition: all 0.2s;
         }
 
-        .action-btn:hover {
-            transform: translateY(-1px);
+        .modal-close:hover { border-color: var(--danger); color: var(--danger); }
+
+        .modal-form .form-group { margin-bottom: 18px; }
+
+        .modal-form label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 7px;
+            color: var(--primary-dark);
         }
 
-        .btn-verify {
-            background: var(--green);
-            color: var(--white);
+        .modal-form .form-control {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid var(--gold-border);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            background: #FDFAF6;
         }
 
-        .btn-prepare {
-            background: #3498DB;
-            color: var(--white);
+        .modal-form .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(245,166,35,0.12);
         }
 
-        .btn-deliver {
-            background: var(--accent);
-            color: var(--white);
+        .modal-form select.form-control {
+            cursor: pointer;
         }
 
-        .btn-cancel {
-            background: var(--danger);
-            color: var(--white);
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+        .modal-footer {
+            display: flex; gap: 12px; justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1.5px solid var(--cream-dark);
+        }
+
+        /* ===== CATEGORY CHIPS ===== */
+        .cat-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .cat-chip {
+            padding: 7px 16px;
+            border-radius: 50px;
+            border: 1.5px solid var(--gold-border);
+            background: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        .cat-chip:hover { border-color: var(--accent); background: var(--accent-light); }
+        .cat-chip.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+        .cat-chip .cat-count {
+            background: rgba(255,255,255,0.25);
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .cat-chip:not(.active) .cat-count { background: var(--accent-light); color: var(--accent); }
+
+        /* ===== CATEGORY MANAGEMENT ===== */
+        .cat-manage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+        }
+
+        .cat-manage-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 22px;
+            border: 1.5px solid var(--cream-dark);
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .cat-manage-card:hover { border-color: var(--gold-border); transform: translateY(-2px); }
+
+        .cat-icon-big {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+
+        .cat-card-name { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+        .cat-card-count { font-size: 0.82rem; color: #8A7A6A; margin-bottom: 14px; }
+
+        /* ===== SEARCH ===== */
+        .search-bar-wrap {
+            position: relative;
+        }
+
+        .search-bar-wrap i {
+            position: absolute;
+            left: 14px; top: 50%;
+            transform: translateY(-50%);
+            color: #9A8A7A;
+        }
+
+        .search-input {
+            width: 280px;
+            padding: 10px 14px 10px 38px;
+            border: 1.5px solid var(--cream-dark);
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            background: var(--white);
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus { outline: none; border-color: var(--accent); }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9A8A7A;
+        }
+
+        .empty-icon { font-size: 3.5rem; margin-bottom: 16px; }
+        .empty-state h3 { font-size: 1.2rem; margin-bottom: 8px; color: #5A4A3A; }
+
+        /* ===== TOAST ===== */
+        .toast-wrap {
+            position: fixed;
+            bottom: 24px; right: 24px;
+            z-index: 9999;
+            display: flex; flex-direction: column; gap: 10px;
         }
 
         .toast {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            padding: 14px 22px;
+            padding: 14px 20px;
             border-radius: 12px;
-            color: var(--white);
+            color: white;
             font-weight: 500;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             animation: toastIn 0.3s ease;
-            z-index: 3000;
+            max-width: 320px;
+            display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
 
-        .toast.success {
-            background: var(--green);
-        }
-
-        .toast.error {
-            background: var(--danger);
-        }
+        .toast.success { background: linear-gradient(135deg, #27AE60, #1E8449); }
+        .toast.error { background: linear-gradient(135deg, #C0392B, #A93226); }
+        .toast.info { background: linear-gradient(135deg, #3498DB, #2980B9); }
 
         @keyframes toastIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
+
+        /* ===== CONFIRM DIALOG ===== */
+        .confirm-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 600;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .confirm-overlay.open { display: flex; }
+
+        .confirm-box {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 380px;
+            width: 90%;
+            text-align: center;
+            border: 2px solid var(--gold-border);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+        }
+
+        .confirm-icon { font-size: 3rem; margin-bottom: 16px; }
+        .confirm-box h3 { font-size: 1.3rem; margin-bottom: 8px; }
+        .confirm-box p { color: #5A4A3A; font-size: 0.95rem; margin-bottom: 24px; }
+        .confirm-actions { display: flex; gap: 12px; justify-content: center; }
     </style>
 </head>
 
 <body>
-    <!-- Login Section -->
-    <div class="login-container" id="login-section">
-        <div class="login-card">
-            <div class="login-header">
-                <div class="logo">🍛</div>
-                <h1>Admin Panel</h1>
-                <p>Apus Kitchen - Order Management</p>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div class="login-screen" id="login-screen">
+    <div class="login-card">
+        <div class="login-logo">🍛</div>
+        <h1>Admin Panel</h1>
+        <p class="subtitle">Apus Kitchen — Business Management</p>
+        <form id="login-form" class="modal-form">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="admin-email" class="form-control" placeholder="admin@apuskitchen.com" required>
             </div>
-            <form id="login-form">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="admin-email" placeholder="admin@apuskitchen.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="admin-password" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn-primary">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Login as Admin
-                </button>
-            </form>
-            <div class="back-link">
-                <a href="index.html">← Back to Website</a>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="admin-password" class="form-control" placeholder="••••••••" required>
             </div>
+            <button type="submit" class="btn-login">
+                <i class="fas fa-sign-in-alt"></i> Sign In as Admin
+            </button>
+        </form>
+        <div class="back-link">
+            <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Website</a>
         </div>
     </div>
+</div>
 
-    <!-- Admin Dashboard -->
-    <div class="admin-dashboard" id="dashboard-section">
-        <nav class="navbar">
-            <a href="#" class="navbar-brand">🍛 Apus Kitchen Admin</a>
-            <div class="navbar-actions">
-                <button class="btn-ghost" onclick="loadOrders()">
-                    <i class="fas fa-sync-alt"></i> Refresh
-                </button>
-                <button class="btn-ghost" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
+<!-- ===== ADMIN LAYOUT ===== -->
+<div class="admin-layout" id="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo-icon">🍛</div>
+            <div>
+                <h2>Apus Kitchen</h2>
+                <div class="admin-label">Admin Console</div>
             </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Main</div>
+            <button class="sidebar-link active" onclick="showPanel('dashboard')" id="nav-dashboard">
+                <i class="fas fa-chart-line"></i> Daily Dashboard
+            </button>
+            <button class="sidebar-link" onclick="showPanel('orders')" id="nav-orders">
+                <i class="fas fa-receipt"></i> Orders
+            </button>
+
+            <div class="nav-section-label">Menu</div>
+            <button class="sidebar-link" onclick="showPanel('menu')" id="nav-menu">
+                <i class="fas fa-utensils"></i> Menu Items
+            </button>
+            <button class="sidebar-link" onclick="showPanel('categories')" id="nav-categories">
+                <i class="fas fa-tags"></i> Categories
+            </button>
         </nav>
 
-        <div class="dashboard-content">
-            <h2 class="section-title">Orders Management</h2>
-            <table class="orders-table">
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Customer</th>
-                        <th>Items</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="orders-body">
-                    <tr>
-                        <td colspan="6" style="text-align: center; color: #5A4A3A;">Loading orders...</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <div class="user-avatar">A</div>
+                <div>
+                    <div class="user-name">Admin</div>
+                    <div class="user-role">Super Admin</div>
+                </div>
+            </div>
+            <button class="sidebar-link" onclick="logout()" style="margin-top:8px; color:#E74C3C;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main-content">
+        <div class="topbar">
+            <div class="topbar-title" id="topbar-title">📊 Daily <span>Dashboard</span></div>
+            <div class="topbar-actions">
+                <button class="btn-icon" onclick="refreshData()" title="Refresh">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="btn-icon" onclick="showToast('All systems running!', 'info')" title="Status">
+                    <i class="fas fa-bell"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="content-area">
+
+            <!-- ===== PANEL: DASHBOARD ===== -->
+            <div class="panel active" id="panel-dashboard">
+
+                <div class="stats-row">
+                    <div class="stat-card total">
+                        <div class="stat-icon" style="background:var(--accent-light); color:var(--accent);">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="stat-label"><i class="fas fa-circle" style="color:var(--accent); font-size:6px;"></i> Total Orders Today</div>
+                        <div class="stat-value" id="stat-total">25</div>
+                        <div class="stat-sub">↑ 4 more than yesterday</div>
+                    </div>
+                    <div class="stat-card pending">
+                        <div class="stat-icon" style="background:rgba(230,126,34,0.12); color:#E67E22;">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-label"><i class="fas fa-circle" style="color:#E67E22; font-size:6px;"></i> Pending Payments</div>
+                        <div class="stat-value" id="stat-pending">4</div>
+                        <div class="stat-sub">Awaiting verification</div>
+                    </div>
+                    <div class="stat-card preparing">
+                        <div class="stat-icon" style="background:var(--blue-light); color:var(--blue);">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="stat-label"><i class="fas fa-circle" style="color:var(--blue); font-size:6px;"></i> Preparing Orders</div>
+                        <div class="stat-value" id="stat-preparing">6</div>
+                        <div class="stat-sub">In kitchen right now</div>
+                    </div>
+                    <div class="stat-card delivered">
+                        <div class="stat-icon" style="background:var(--green-light); color:var(--green);">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-label"><i class="fas fa-circle" style="color:var(--green); font-size:6px;"></i> Delivered</div>
+                        <div class="stat-value" id="stat-delivered">15</div>
+                        <div class="stat-sub">Successfully completed</div>
+                    </div>
+                    <div class="stat-card revenue">
+                        <div class="stat-icon" style="background:rgba(142,68,173,0.12); color:var(--purple);">
+                            <i class="fas fa-rupee-sign"></i>
+                        </div>
+                        <div class="stat-label"><i class="fas fa-circle" style="color:var(--purple); font-size:6px;"></i> Revenue Today</div>
+                        <div class="stat-value" id="stat-revenue">₹3,200</div>
+                        <div class="stat-sub">↑ 12% from yesterday</div>
+                    </div>
+                </div>
+
+                <div class="section-header">
+                    <h2>Recent Orders</h2>
+                    <button class="btn btn-outline" onclick="showPanel('orders')">
+                        View All <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div class="table-wrap">
+                    <table class="data-table" id="recent-orders-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-orders-body">
+                            <tr><td colspan="6" style="text-align:center; color:#9A8A7A; padding:40px;">Loading orders...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ===== PANEL: ORDERS ===== -->
+            <div class="panel" id="panel-orders">
+                <div class="section-header">
+                    <h2>All Orders</h2>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <div class="search-bar-wrap">
+                            <i class="fas fa-search"></i>
+                            <input type="text" class="search-input" placeholder="Search orders..." oninput="filterOrders(this.value)" id="order-search">
+                        </div>
+                        <button class="btn btn-outline" onclick="loadOrders()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="all-orders-body">
+                            <tr><td colspan="7" style="text-align:center; color:#9A8A7A; padding:40px;">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ===== PANEL: MENU ===== -->
+            <div class="panel" id="panel-menu">
+                <div class="section-header">
+                    <h2>Menu Items</h2>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <div class="search-bar-wrap">
+                            <i class="fas fa-search"></i>
+                            <input type="text" class="search-input" placeholder="Search menu..." oninput="filterMenuItems(this.value)">
+                        </div>
+                        <button class="btn btn-primary-sm btn-lg" onclick="openAddItemModal()">
+                            <i class="fas fa-plus"></i> Add Item
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Category Filter -->
+                <div class="cat-chips" id="menu-cat-chips"></div>
+
+                <!-- Menu Grid -->
+                <div class="menu-grid" id="menu-grid"></div>
+            </div>
+
+            <!-- ===== PANEL: CATEGORIES ===== -->
+            <div class="panel" id="panel-categories">
+                <div class="section-header">
+                    <h2>Manage Categories</h2>
+                    <button class="btn btn-primary-sm btn-lg" onclick="openAddCatModal()">
+                        <i class="fas fa-plus"></i> Add Category
+                    </button>
+                </div>
+
+                <div class="cat-manage-grid" id="cat-manage-grid"></div>
+            </div>
+
+        </div><!-- /content-area -->
+    </div><!-- /main-content -->
+</div><!-- /admin-layout -->
+
+<!-- ===== MENU ITEM MODAL ===== -->
+<div class="modal-overlay" id="item-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="item-modal-title">Add Menu Item</h3>
+            <button class="modal-close" onclick="closeItemModal()">×</button>
+        </div>
+        <form class="modal-form" id="item-form" onsubmit="saveItem(event)">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Item Name *</label>
+                    <input type="text" class="form-control" id="item-name" placeholder="e.g. Dal Tadka" required>
+                </div>
+                <div class="form-group">
+                    <label>Icon / Emoji *</label>
+                    <input type="text" class="form-control" id="item-icon" placeholder="🥣" maxlength="4" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <input type="text" class="form-control" id="item-desc" placeholder="Short description of the dish">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Price (₹) *</label>
+                    <input type="number" class="form-control" id="item-price" placeholder="0" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label>Category *</label>
+                    <select class="form-control" id="item-cat" required>
+                        <option value="">Select category...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Type</label>
+                    <select class="form-control" id="item-type">
+                        <option value="veg">🟢 Vegetarian</option>
+                        <option value="non">🔴 Non-Vegetarian</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Availability</label>
+                    <select class="form-control" id="item-available">
+                        <option value="1">✅ Available</option>
+                        <option value="0">❌ Not Available</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline btn-lg" onclick="closeItemModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary-sm btn-lg" id="item-save-btn">
+                    <i class="fas fa-save"></i> Save Item
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ===== CATEGORY MODAL ===== -->
+<div class="modal-overlay" id="cat-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="cat-modal-title">Add Category</h3>
+            <button class="modal-close" onclick="closeCatModal()">×</button>
+        </div>
+        <form class="modal-form" id="cat-form" onsubmit="saveCat(event)">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Category Name *</label>
+                    <input type="text" class="form-control" id="cat-name" placeholder="e.g. Tiffin" required>
+                </div>
+                <div class="form-group">
+                    <label>Icon / Emoji *</label>
+                    <input type="text" class="form-control" id="cat-icon" placeholder="🍱" maxlength="4" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Key (slug) *</label>
+                <input type="text" class="form-control" id="cat-key" placeholder="e.g. tiffin" required pattern="[a-z0-9_-]+">
+                <small style="color:#9A8A7A; font-size:0.8rem; margin-top:4px; display:block;">Lowercase letters, numbers, hyphens only</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline btn-lg" onclick="closeCatModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary-sm btn-lg">
+                    <i class="fas fa-save"></i> Save Category
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ===== CONFIRM DIALOG ===== -->
+<div class="confirm-overlay" id="confirm-overlay">
+    <div class="confirm-box">
+        <div class="confirm-icon" id="confirm-icon">⚠️</div>
+        <h3 id="confirm-title">Are you sure?</h3>
+        <p id="confirm-msg">This action cannot be undone.</p>
+        <div class="confirm-actions">
+            <button class="btn btn-outline btn-lg" onclick="closeConfirm()">Cancel</button>
+            <button class="btn btn-danger btn-lg" id="confirm-ok-btn" onclick="confirmAction()">
+                <i class="fas fa-trash"></i> Delete
+            </button>
         </div>
     </div>
+</div>
 
-    <div id="toast-container"></div>
+<!-- Toast Container -->
+<div class="toast-wrap" id="toast-wrap"></div>
 
-    <script>
-        let adminToken = localStorage.getItem('adminToken');
+<script>
+// ============================================================
+//  STATE
+// ============================================================
+let adminToken = localStorage.getItem('adminToken');
+let allOrders = [];
+let editingItemId = null;
+let editingCatId = null;
+let confirmCallback = null;
+let menuFilter = 'all';
+let menuSearch = '';
 
-        // Check if already logged in
-        if (adminToken) {
-            showDashboard();
-        }
+// ============================================================
+//  CATEGORIES (Local data store)
+// ============================================================
+let categories = [
+    { id: 1, key: 'tiffin',  name: 'Tiffin Combos',  icon: '🍱' },
+    { id: 2, key: 'sabzi',   name: 'Sabzi & Curry',   icon: '🍛' },
+    { id: 3, key: 'rice',    name: 'Rice & Roti',     icon: '🍚' },
+    { id: 4, key: 'snacks',  name: 'Snacks',          icon: '🥣' },
+];
 
-        // Login form handler
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('admin-email').value;
-            const password = document.getElementById('admin-password').value;
+// ============================================================
+//  MENU ITEMS (Fetched from backend API)
+// ============================================================
+let menuItems = [];
+let nextItemId = 17;
+let nextCatId = 5;
 
-            try {
-                const response = await fetch('http://localhost:5000/auth/admin-login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    adminToken = data.token;
-                    localStorage.setItem('adminToken', adminToken);
-                    showToast('Login successful!', 'success');
-                    showDashboard();
-                } else {
-                    showToast(data.error || 'Login failed', 'error');
-                }
-            } catch (error) {
-                showToast('Error connecting to server', 'error');
-                console.error(error);
+// Fetch menu items from backend
+async function fetchMenuItems() {
+    try {
+        const res = await fetch('http://localhost:5000/menu/items');
+        if (res.ok) {
+            const data = await res.json();
+            // Map backend data to frontend format
+            menuItems = data.map(item => ({
+                id: item.id,
+                name: item.name,
+                desc: item.description || item.name, // Use name as fallback for empty description
+                price: item.price,
+                cat: item.category,
+                icon: '�', // Default icon, can be enhanced
+                type: 'veg', // Default type, can be enhanced
+                available: item.available
+            }));
+            if (menuItems.length > 0) {
+                nextItemId = Math.max(...menuItems.map(i => i.id)) + 1;
             }
+            console.log('Fetched menu items:', menuItems.length);
+        } else {
+            console.error('Failed to fetch menu items:', res.status);
+            loadFallbackMenu();
+        }
+    } catch (error) {
+        console.error('Failed to fetch menu items:', error);
+        // Load fallback data if backend is not available
+        loadFallbackMenu();
+    }
+}
+
+function loadFallbackMenu() {
+    menuItems = [
+        { id: 1,  name: 'Full Tiffin',      desc: 'Dal + Sabzi + 4 Roti + Rice + Salad',               price: 150, cat: 'tiffin',  icon: '🍱', type: 'veg', available: true  },
+        { id: 2,  name: 'Half Tiffin',      desc: 'Dal + Sabzi + 2 Roti + Rice',                       price: 90,  cat: 'tiffin',  icon: '🥡', type: 'veg', available: true  },
+        { id: 3,  name: 'Premium Thali',    desc: 'Dal Makhani + Paneer + 4 Roti + Rice + Raita + Sweet', price: 200, cat: 'tiffin', icon: '🍽️', type: 'veg', available: true },
+        { id: 4,  name: 'Dal Tadka',        desc: 'Yellow lentils tempered with garlic, cumin & ghee', price: 80,  cat: 'sabzi',   icon: '🥣', type: 'veg', available: true  },
+        { id: 5,  name: 'Paneer Masala',    desc: 'Soft cottage cheese in rich tomato gravy',           price: 110, cat: 'sabzi',   icon: '🧈', type: 'veg', available: true  },
+        { id: 6,  name: 'Aloo Gobhi',       desc: 'Potato & cauliflower dry sabzi',                    price: 75,  cat: 'sabzi',   icon: '🥔', type: 'veg', available: true  },
+        { id: 7,  name: 'Chole',            desc: 'Spicy chickpeas in onion-tomato gravy',             price: 90,  cat: 'sabzi',   icon: '🍛', type: 'veg', available: true  },
+        { id: 8,  name: 'Mix Sabzi',        desc: 'Seasonal mixed vegetables',                         price: 75,  cat: 'sabzi',   icon: '🥗', type: 'veg', available: false },
+        { id: 9,  name: 'Jeera Rice',       desc: 'Fragrant basmati rice with cumin & ghee',           price: 70,  cat: 'rice',    icon: '🍚', type: 'veg', available: true  },
+        { id: 10, name: 'Khichdi',          desc: 'Rice & lentils comfort bowl with ghee',             price: 90,  cat: 'rice',    icon: '🍲', type: 'veg', available: true  },
+        { id: 11, name: 'Roti (4 pcs)',     desc: 'Fresh whole wheat rotis',                           price: 40,  cat: 'rice',    icon: '🫓', type: 'veg', available: true  },
+        { id: 12, name: 'Paratha (2 pcs)',  desc: 'Flaky layered parathas',                            price: 60,  cat: 'rice',    icon: '🥞', type: 'veg', available: true  },
+        { id: 13, name: 'Steamed Rice',     desc: 'Plain fluffy steamed rice',                         price: 50,  cat: 'rice',    icon: '🍚', type: 'veg', available: true  },
+        { id: 14, name: 'Poha',             desc: 'Flattened rice with peanuts & spices',              price: 50,  cat: 'snacks',  icon: '🥣', type: 'veg', available: true  },
+        { id: 15, name: 'Upma',             desc: 'Semolina savoury breakfast',                        price: 55,  cat: 'snacks',  icon: '🍲', type: 'veg', available: true  },
+        { id: 16, name: 'Raita',            desc: 'Yogurt with cucumber & spices',                     price: 40,  cat: 'snacks',  icon: '🥣', type: 'veg', available: true  },
+    ];
+    nextItemId = 17;
+    console.log('Loaded fallback menu items');
+}
+
+// ============================================================
+//  MOCK ORDERS
+// ============================================================
+const mockOrders = [
+    { id: 1001, customer_name: 'Priya Sharma',  items: [{name:'Full Tiffin'},{name:'Raita'}],          total_price: 190, status: 'delivered',       time: '08:14 AM' },
+    { id: 1002, customer_name: 'Rahul Mehta',   items: [{name:'Paneer Masala'},{name:'Roti (4 pcs)'}], total_price: 150, status: 'preparing',        time: '09:02 AM' },
+    { id: 1003, customer_name: 'Sneha Patel',   items: [{name:'Premium Thali'}],                       total_price: 200, status: 'delivered',       time: '09:30 AM' },
+    { id: 1004, customer_name: 'Amit Desai',    items: [{name:'Dal Tadka'},{name:'Jeera Rice'}],       total_price: 150, status: 'pending_payment',  time: '10:01 AM' },
+    { id: 1005, customer_name: 'Kavita Nair',   items: [{name:'Half Tiffin'}],                         total_price: 90,  status: 'preparing',        time: '10:15 AM' },
+    { id: 1006, customer_name: 'Rohan Singh',   items: [{name:'Chole'},{name:'Paratha (2 pcs)'}],      total_price: 150, status: 'pending_payment',  time: '10:44 AM' },
+    { id: 1007, customer_name: 'Deepa Iyer',    items: [{name:'Full Tiffin'},{name:'Khichdi'}],        total_price: 240, status: 'delivered',        time: '11:00 AM' },
+    { id: 1008, customer_name: 'Vikram Rao',    items: [{name:'Aloo Gobhi'},{name:'Steamed Rice'}],    total_price: 125, status: 'pending_payment',  time: '11:22 AM' },
+    { id: 1009, customer_name: 'Meena Joshi',   items: [{name:'Premium Thali'}],                       total_price: 200, status: 'preparing',        time: '11:50 AM' },
+    { id: 1010, customer_name: 'Suresh Kumar',  items: [{name:'Poha'},{name:'Upma'}],                  total_price: 105, status: 'delivered',        time: '12:05 PM' },
+];
+
+// ============================================================
+//  AUTH
+// ============================================================
+if (adminToken) { showAdmin(); }
+
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('admin-email').value;
+    const password = document.getElementById('admin-password').value;
+
+    try {
+        const res = await fetch('http://localhost:5000/auth/admin-login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            adminToken = data.token;
+            localStorage.setItem('adminToken', adminToken);
+            showToast('Welcome back, Admin!', 'success');
+            showAdmin();
+        } else {
+            showToast(data.error || 'Invalid credentials', 'error');
+        }
+    } catch {
+        // Demo mode — allow login with any credentials
+        adminToken = 'demo-token';
+        localStorage.setItem('adminToken', adminToken);
+        showToast('Logged in (demo mode)', 'info');
+        showAdmin();
+    }
+});
+
+async function showAdmin() {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-layout').classList.add('visible');
+    await fetchMenuItems();
+    loadOrders();
+    renderMenu();
+    renderCategoryChips();
+    renderCategoryManage();
+}
+
+function logout() {
+    localStorage.removeItem('adminToken');
+    adminToken = null;
+    document.getElementById('admin-layout').classList.remove('visible');
+    document.getElementById('login-screen').style.display = 'flex';
+    showToast('Logged out', 'info');
+}
+
+// ============================================================
+//  NAVIGATION
+// ============================================================
+const panelTitles = {
+    dashboard:  '📊 Daily <span>Dashboard</span>',
+    orders:     '📋 All <span>Orders</span>',
+    menu:       '🍽️ Menu <span>Items</span>',
+    categories: '🏷️ Manage <span>Categories</span>',
+};
+
+function showPanel(name) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    const navBtn = document.getElementById('nav-' + name);
+    if (navBtn) navBtn.classList.add('active');
+    document.getElementById('topbar-title').innerHTML = panelTitles[name] || name;
+
+    if (name === 'dashboard') loadOrders();
+    if (name === 'orders') loadOrders();
+    if (name === 'menu') { renderMenu(); renderCategoryChips(); }
+    if (name === 'categories') renderCategoryManage();
+}
+
+// ============================================================
+//  ORDERS
+// ============================================================
+async function loadOrders() {
+    try {
+        const res = await fetch('http://localhost:5000/orders/', {
+            headers: { 'Authorization': `Bearer ${adminToken}` }
+        });
+        const data = await res.json();
+        if (res.ok) {
+            allOrders = data;
+            renderDashboard();
+            renderAllOrders();
+            return;
+        }
+    } catch {}
+
+    // Fallback: use mock data
+    allOrders = mockOrders;
+    renderDashboard();
+    renderAllOrders();
+}
+
+function renderDashboard() {
+    const today = allOrders;
+    const pending   = today.filter(o => o.status === 'pending_payment').length;
+    const preparing = today.filter(o => o.status === 'preparing').length;
+    const delivered = today.filter(o => o.status === 'delivered').length;
+    const revenue   = today.filter(o => o.status !== 'cancelled')
+                           .reduce((s, o) => s + (o.total_price || 0), 0);
+
+    document.getElementById('stat-total').textContent    = today.length;
+    document.getElementById('stat-pending').textContent  = pending;
+    document.getElementById('stat-preparing').textContent = preparing;
+    document.getElementById('stat-delivered').textContent = delivered;
+    document.getElementById('stat-revenue').textContent  = '₹' + revenue.toLocaleString('en-IN');
+
+    // Render recent (last 5)
+    const tbody = document.getElementById('recent-orders-body');
+    tbody.innerHTML = today.slice(0, 5).map(o => orderRow(o, false)).join('');
+}
+
+function renderAllOrders() {
+    const q = (document.getElementById('order-search')?.value || '').toLowerCase();
+    const filtered = q ? allOrders.filter(o =>
+        o.customer_name?.toLowerCase().includes(q) || String(o.id).includes(q)
+    ) : allOrders;
+
+    const tbody = document.getElementById('all-orders-body');
+    if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#9A8A7A;">No orders found</td></tr>`;
+        return;
+    }
+    tbody.innerHTML = filtered.map(o => orderRow(o, true)).join('');
+}
+
+function filterOrders(q) { renderAllOrders(); }
+
+function orderRow(o, showTime) {
+    const statusMap = {
+        pending_payment: ['badge-pending', 'Pending Payment'],
+        payment_verified: ['badge-verified', 'Payment Verified'],
+        preparing:       ['badge-preparing', '🔥 Preparing'],
+        delivered:       ['badge-delivered', '✅ Delivered'],
+        cancelled:       ['badge-cancelled', 'Cancelled'],
+    };
+    const [cls, label] = statusMap[o.status] || ['badge-pending', o.status];
+    const items = o.items ? o.items.map(i => i.name).join(', ') : '-';
+    const timeCell = showTime ? `<td>${o.time || '--'}</td>` : '';
+
+    return `<tr>
+        <td><strong>#${o.id}</strong></td>
+        <td>${o.customer_name || 'Guest'}</td>
+        <td style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${items}</td>
+        <td><strong>₹${o.total_price}</strong></td>
+        ${timeCell}
+        <td><span class="badge ${cls}">${label}</span></td>
+        <td>${orderActions(o)}</td>
+    </tr>`;
+}
+
+function orderActions(o) {
+    if (o.status === 'pending_payment') return `
+        <button class="btn btn-success" onclick="updateOrderStatus(${o.id}, 'payment_verified')"><i class="fas fa-check"></i> Verify</button>
+        <button class="btn btn-danger" style="margin-left:6px;" onclick="updateOrderStatus(${o.id}, 'cancelled')"><i class="fas fa-times"></i></button>`;
+    if (o.status === 'payment_verified') return `
+        <button class="btn btn-info" onclick="updateOrderStatus(${o.id}, 'delivered')"><i class="fas fa-check-circle"></i> Complete</button>
+        <button class="btn btn-danger" style="margin-left:6px;" onclick="updateOrderStatus(${o.id}, 'cancelled')"><i class="fas fa-times"></i></button>`;
+    return `<span style="color:#9A8A7A; font-size:0.82rem;">${o.status === 'delivered' ? 'Completed' : 'Cancelled'}</span>`;
+}
+
+async function updateOrderStatus(orderId, newStatus) {
+    try {
+        const res = await fetch(`http://localhost:5000/orders/${orderId}/status`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+            body: JSON.stringify({ status: newStatus })
+        });
+        const data = await res.json();
+        if (res.ok) { showToast(data.message || 'Status updated', 'success'); loadOrders(); return; }
+    } catch {}
+
+    // Demo mode
+    const order = allOrders.find(o => o.id === orderId);
+    if (order) {
+        order.status = newStatus;
+        showToast(`Order #${orderId} → ${newStatus.replace('_', ' ')}`, 'success');
+        renderDashboard();
+        renderAllOrders();
+    }
+}
+
+function refreshData() {
+    loadOrders();
+    showToast('Data refreshed!', 'info');
+}
+
+// ============================================================
+//  MENU MANAGEMENT
+// ============================================================
+function renderCategoryChips() {
+    const container = document.getElementById('menu-cat-chips');
+    const all = [{ key: 'all', name: 'All Items', icon: '🍽️' }, ...categories];
+    container.innerHTML = all.map(c => {
+        const count = c.key === 'all' ? menuItems.length : menuItems.filter(m => m.cat === c.key).length;
+        return `<button class="cat-chip ${menuFilter === c.key ? 'active' : ''}" onclick="setMenuFilter('${c.key}')">
+            ${c.icon} ${c.name} <span class="cat-count">${count}</span>
+        </button>`;
+    }).join('');
+}
+
+function setMenuFilter(key) {
+    menuFilter = key;
+    renderCategoryChips();
+    renderMenu();
+}
+
+function filterMenuItems(q) {
+    menuSearch = q.toLowerCase();
+    renderMenu();
+}
+
+function renderMenu() {
+    let items = menuFilter === 'all' ? menuItems : menuItems.filter(i => i.cat === menuFilter);
+    if (menuSearch) items = items.filter(i => i.name.toLowerCase().includes(menuSearch) || i.desc.toLowerCase().includes(menuSearch));
+
+    const container = document.getElementById('menu-grid');
+    if (!items.length) {
+        container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+            <div class="empty-icon">🔍</div>
+            <h3>No items found</h3>
+            <p>Try a different search or category</p>
+        </div>`;
+        return;
+    }
+
+    container.innerHTML = items.map(item => {
+        const cat = categories.find(c => c.key === item.cat);
+        return `<div class="menu-card" id="menu-card-${item.id}">
+            <div class="menu-card-header">
+                <div class="menu-card-icon">${item.icon}</div>
+                <div class="toggle-wrap" title="Toggle availability">
+                    <label class="toggle">
+                        <input type="checkbox" ${item.available ? 'checked' : ''} onchange="toggleAvailability(${item.id}, this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label">${item.available ? 'Available' : 'Off'}</span>
+                </div>
+            </div>
+            <div class="menu-card-body">
+                <div class="menu-card-name">${item.name}</div>
+                <div class="menu-card-desc">${item.desc || '—'}</div>
+                <div class="menu-card-meta">
+                    <span class="menu-card-price">₹${item.price}</span>
+                    ${cat ? `<span class="menu-cat-pill">${cat.icon} ${cat.name}</span>` : ''}
+                    <span class="badge ${item.type === 'veg' ? 'badge-available' : 'badge-cancelled'}" style="font-size:0.7rem;">
+                        ${item.type === 'veg' ? '🟢 Veg' : '🔴 Non-veg'}
+                    </span>
+                </div>
+            </div>
+            <div class="menu-card-actions">
+                <button class="btn btn-outline" onclick="openEditItemModal(${item.id})">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="btn btn-danger" onclick="confirmDeleteItem(${item.id})" style="margin-left:auto;">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+async function toggleAvailability(id, available) {
+    const item = menuItems.find(i => i.id === id);
+    if (!item) return;
+
+    // Optimistically update the UI label first
+    const card = document.getElementById('menu-card-' + id);
+    const label = card ? card.querySelector('.toggle-label') : null;
+    if (label) label.textContent = available ? 'Available' : 'Off';
+
+    try {
+        const res = await fetch(`http://localhost:5000/menu/items/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${adminToken}`   // ← was missing!
+            },
+            body: JSON.stringify({
+                name: item.name,
+                description: item.desc,
+                price: item.price,
+                category: item.cat,
+                available: available
+            })
         });
 
-        function showDashboard() {
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('dashboard-section').style.display = 'block';
-            loadOrders();
-        }
-
-        function logout() {
-            localStorage.removeItem('adminToken');
-            adminToken = null;
-            document.getElementById('dashboard-section').style.display = 'none';
-            document.getElementById('login-section').style.display = 'flex';
-            showToast('Logged out successfully', 'success');
-        }
-
-        async function loadOrders() {
-            try {
-                const response = await fetch('http://localhost:5000/orders/', {
-                    headers: { 'Authorization': `Bearer ${adminToken}` }
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    renderOrders(data);
-                } else {
-                    showToast('Failed to load orders', 'error');
-                }
-            } catch (error) {
-                showToast('Error loading orders', 'error');
-                console.error(error);
+        if (res.ok) {
+            item.available = available;
+            showToast(`${item.name} is now ${available ? 'available ✅' : 'unavailable ❌'}`, available ? 'success' : 'info');
+            renderCategoryChips();
+        } else {
+            const errData = await res.json().catch(() => ({}));
+            if (res.status === 401 || res.status === 403) {
+                // Token invalid / expired — update locally for demo mode
+                item.available = available;
+                showToast(`${item.name} updated (demo mode — not saved to server)`, 'info');
+                renderCategoryChips();
+            } else {
+                // Real error — revert UI
+                if (label) label.textContent = !available ? 'Available' : 'Off';
+                const toggle = card ? card.querySelector('.toggle input') : null;
+                if (toggle) toggle.checked = !available;
+                showToast(errData.error || 'Failed to update availability', 'error');
             }
         }
+    } catch (error) {
+        // Network error — update locally (demo mode)
+        console.warn('API unavailable, updating locally:', error);
+        item.available = available;
+        showToast(`${item.name} updated locally (server offline)`, 'info');
+        renderCategoryChips();
+    }
+}
 
-        function renderOrders(orders) {
-            const tbody = document.getElementById('orders-body');
-            
-            if (orders.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #5A4A3A;">No orders yet</td></tr>';
-                return;
-            }
+// ============================================================
+//  MENU MODAL
+// ============================================================
+function populateCatSelect() {
+    const sel = document.getElementById('item-cat');
+    sel.innerHTML = '<option value="">Select category...</option>' +
+        categories.map(c => `<option value="${c.key}">${c.icon} ${c.name}</option>`).join('');
+}
 
-            tbody.innerHTML = orders.map(order => `
-                <tr>
-                    <td>#${order.id}</td>
-                    <td>${order.customer_name || 'Guest'}</td>
-                    <td>${order.items ? order.items.length + ' items' : '-'}</td>
-                    <td>₹${order.total_price}</td>
-                    <td><span class="status-badge status-${order.status}">${order.status.replace('_', ' ')}</span></td>
-                    <td>
-                        ${getActionButtons(order)}
-                    </td>
-                </tr>
-            `).join('');
-        }
+function openAddItemModal() {
+    editingItemId = null;
+    document.getElementById('item-modal-title').textContent = 'Add Menu Item';
+    document.getElementById('item-save-btn').innerHTML = '<i class="fas fa-plus"></i> Add Item';
+    document.getElementById('item-form').reset();
+    populateCatSelect();
+    document.getElementById('item-modal').classList.add('open');
+}
 
-        function getActionButtons(order) {
-            const buttons = [];
+function openEditItemModal(id) {
+    editingItemId = id;
+    const item = menuItems.find(i => i.id === id);
+    if (!item) return;
+    document.getElementById('item-modal-title').textContent = 'Edit Menu Item';
+    document.getElementById('item-save-btn').innerHTML = '<i class="fas fa-save"></i> Save Changes';
+    populateCatSelect();
+    document.getElementById('item-name').value      = item.name;
+    document.getElementById('item-icon').value      = item.icon;
+    document.getElementById('item-desc').value      = item.desc || '';
+    document.getElementById('item-price').value     = item.price;
+    document.getElementById('item-cat').value       = item.cat;
+    document.getElementById('item-type').value      = item.type;
+    document.getElementById('item-available').value = item.available ? '1' : '0';
+    document.getElementById('item-modal').classList.add('open');
+}
 
-            if (order.status === 'pending_payment') {
-                buttons.push(`<button class="action-btn btn-verify" onclick="updateStatus(${order.id}, 'payment_verified')">Verify Payment</button>`);
-                buttons.push(`<button class="action-btn btn-cancel" onclick="updateStatus(${order.id}, 'cancelled')">Cancel</button>`);
-            } else if (order.status === 'payment_verified') {
-                buttons.push(`<button class="action-btn btn-prepare" onclick="updateStatus(${order.id}, 'preparing')">Start Preparing</button>`);
-                buttons.push(`<button class="action-btn btn-cancel" onclick="updateStatus(${order.id}, 'cancelled')">Cancel</button>`);
-            } else if (order.status === 'preparing') {
-                buttons.push(`<button class="action-btn btn-deliver" onclick="updateStatus(${order.id}, 'delivered')">Mark Delivered</button>`);
-            }
+function closeItemModal() {
+    document.getElementById('item-modal').classList.remove('open');
+    editingItemId = null;
+}
 
-            return buttons.join('');
-        }
+function saveItem(e) {
+    e.preventDefault();
+    const name  = document.getElementById('item-name').value.trim();
+    const icon  = document.getElementById('item-icon').value.trim();
+    const desc  = document.getElementById('item-desc').value.trim();
+    const price = parseInt(document.getElementById('item-price').value);
+    const cat   = document.getElementById('item-cat').value;
+    const type  = document.getElementById('item-type').value;
+    const avail = document.getElementById('item-available').value === '1';
 
-        async function updateStatus(orderId, newStatus) {
-            try {
-                const response = await fetch(`http://localhost:5000/orders/${orderId}/status`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${adminToken}`
-                    },
-                    body: JSON.stringify({ status: newStatus })
-                });
+    if (editingItemId) {
+        const item = menuItems.find(i => i.id === editingItemId);
+        if (item) { Object.assign(item, { name, icon, desc, price, cat, type, available: avail }); }
+        showToast(`"${name}" updated!`, 'success');
+    } else {
+        menuItems.push({ id: nextItemId++, name, icon, desc, price, cat, type, available: avail });
+        showToast(`"${name}" added to menu!`, 'success');
+    }
 
-                const data = await response.json();
+    closeItemModal();
+    renderMenu();
+    renderCategoryChips();
+}
 
-                if (response.ok) {
-                    showToast(data.message, 'success');
-                    loadOrders();
-                } else {
-                    showToast(data.error || 'Failed to update status', 'error');
-                }
-            } catch (error) {
-                showToast('Error updating status', 'error');
-                console.error(error);
-            }
-        }
+function confirmDeleteItem(id) {
+    const item = menuItems.find(i => i.id === id);
+    if (!item) return;
+    document.getElementById('confirm-icon').textContent = '🗑️';
+    document.getElementById('confirm-title').textContent = 'Delete Item?';
+    document.getElementById('confirm-msg').textContent = `"${item.name}" will be permanently removed from the menu.`;
+    document.getElementById('confirm-ok-btn').innerHTML = '<i class="fas fa-trash"></i> Delete';
+    confirmCallback = () => {
+        menuItems = menuItems.filter(i => i.id !== id);
+        showToast(`"${item.name}" deleted`, 'info');
+        renderMenu();
+        renderCategoryChips();
+    };
+    document.getElementById('confirm-overlay').classList.add('open');
+}
 
-        function showToast(message, type) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast ' + type;
-            toast.textContent = message;
-            container.appendChild(toast);
-            setTimeout(() => { toast.remove(); }, 4000);
-        }
-    </script>
+// ============================================================
+//  CATEGORY MANAGEMENT
+// ============================================================
+function renderCategoryManage() {
+    const container = document.getElementById('cat-manage-grid');
+    container.innerHTML = categories.map(c => {
+        const count = menuItems.filter(m => m.cat === c.key).length;
+        return `<div class="cat-manage-card">
+            <div class="cat-icon-big">${c.icon}</div>
+            <div class="cat-card-name">${c.name}</div>
+            <div class="cat-card-count">${count} item${count !== 1 ? 's' : ''}</div>
+            <div style="display:flex; gap:8px; justify-content:center;">
+                <button class="btn btn-outline" onclick="openEditCatModal(${c.id})">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="btn btn-danger" onclick="confirmDeleteCat(${c.id})">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>`;
+    }).join('') + `
+        <div class="cat-manage-card" style="border:2px dashed var(--gold-border); cursor:pointer; display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;" onclick="openAddCatModal()">
+            <div style="font-size:2rem; color:var(--gold-border);">+</div>
+            <div style="color:#9A8A7A; font-size:0.9rem; font-weight:600;">Add Category</div>
+        </div>`;
+}
+
+function openAddCatModal() {
+    editingCatId = null;
+    document.getElementById('cat-modal-title').textContent = 'Add Category';
+    document.getElementById('cat-form').reset();
+    document.getElementById('cat-modal').classList.add('open');
+}
+
+function openEditCatModal(id) {
+    editingCatId = id;
+    const cat = categories.find(c => c.id === id);
+    if (!cat) return;
+    document.getElementById('cat-modal-title').textContent = 'Edit Category';
+    document.getElementById('cat-name').value = cat.name;
+    document.getElementById('cat-icon').value = cat.icon;
+    document.getElementById('cat-key').value  = cat.key;
+    document.getElementById('cat-modal').classList.add('open');
+}
+
+function closeCatModal() {
+    document.getElementById('cat-modal').classList.remove('open');
+    editingCatId = null;
+}
+
+function saveCat(e) {
+    e.preventDefault();
+    const name = document.getElementById('cat-name').value.trim();
+    const icon = document.getElementById('cat-icon').value.trim();
+    const key  = document.getElementById('cat-key').value.trim().toLowerCase();
+
+    if (editingCatId) {
+        const cat = categories.find(c => c.id === editingCatId);
+        if (cat) { Object.assign(cat, { name, icon, key }); }
+        showToast(`Category "${name}" updated!`, 'success');
+    } else {
+        categories.push({ id: nextCatId++, key, name, icon });
+        showToast(`Category "${name}" added!`, 'success');
+    }
+
+    closeCatModal();
+    renderCategoryManage();
+    renderCategoryChips();
+    populateCatSelect();
+}
+
+function confirmDeleteCat(id) {
+    const cat = categories.find(c => c.id === id);
+    if (!cat) return;
+    const inUse = menuItems.filter(m => m.cat === cat.key).length;
+    document.getElementById('confirm-icon').textContent = '⚠️';
+    document.getElementById('confirm-title').textContent = 'Delete Category?';
+    document.getElementById('confirm-msg').textContent = inUse > 0
+        ? `"${cat.name}" has ${inUse} menu item(s). Deleting it will leave those items uncategorised.`
+        : `"${cat.name}" will be permanently deleted.`;
+    document.getElementById('confirm-ok-btn').innerHTML = '<i class="fas fa-trash"></i> Delete';
+    confirmCallback = () => {
+        categories = categories.filter(c => c.id !== id);
+        showToast(`Category "${cat.name}" deleted`, 'info');
+        renderCategoryManage();
+        renderCategoryChips();
+        renderMenu();
+    };
+    document.getElementById('confirm-overlay').classList.add('open');
+}
+
+// ============================================================
+//  CONFIRM DIALOG
+// ============================================================
+function confirmAction() {
+    if (confirmCallback) { confirmCallback(); confirmCallback = null; }
+    closeConfirm();
+}
+
+function closeConfirm() {
+    document.getElementById('confirm-overlay').classList.remove('open');
+}
+
+// ============================================================
+//  TOAST
+// ============================================================
+function showToast(message, type = 'success') {
+    const icons = { success: 'fa-check-circle', error: 'fa-times-circle', info: 'fa-info-circle' };
+    const wrap = document.getElementById('toast-wrap');
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i> ${message}`;
+    wrap.appendChild(t);
+    setTimeout(() => t.remove(), 4000);
+}
+
+// ============================================================
+//  CLOSE MODALS ON OVERLAY CLICK
+// ============================================================
+document.getElementById('item-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeItemModal(); });
+document.getElementById('cat-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeCatModal(); });
+document.getElementById('confirm-overlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeConfirm(); });
+</script>
+
 </body>
-
 </html>

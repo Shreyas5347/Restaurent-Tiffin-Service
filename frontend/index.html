@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apus Kitchen - Ghar Ka Khana, Dil Se Banaya</title>
+    <title>Apu's Kitchen - Ghar Ka Khana, Dil Se Banaya</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -548,88 +548,6 @@
             transform: translateY(-1px);
         }
 
-        /* Combo Builder */
-        .combo-builder {
-            background: var(--white);
-            border: 2px solid var(--gold-border);
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .combo-step {
-            margin-bottom: 28px;
-        }
-
-        .combo-step h4 {
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-            color: var(--primary-dark);
-        }
-
-        .combo-options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .combo-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 1.5px solid var(--cream-dark);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .combo-option:hover {
-            border-color: var(--gold-border);
-            background: rgba(245, 166, 35, 0.04);
-        }
-
-        .combo-option.selected {
-            border-color: var(--accent);
-            background: rgba(245, 166, 35, 0.08);
-        }
-
-        .combo-option input {
-            cursor: pointer;
-        }
-
-        .combo-option .opt-name {
-            flex: 1;
-            font-weight: 500;
-        }
-
-        .combo-option .opt-price {
-            color: var(--cta);
-            font-weight: 600;
-        }
-
-        .combo-total {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 20px;
-            border-top: 2px dashed var(--gold-border);
-            margin-bottom: 20px;
-        }
-
-        .combo-total .label {
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        .combo-total .amount {
-            font-size: 1.6rem;
-            color: var(--cta);
-            font-weight: 700;
-            font-family: 'Playfair Display', serif;
-        }
-
         /* Reviews */
         .reviews-grid {
             display: grid;
@@ -849,33 +767,114 @@
             font-size: 1rem;
         }
 
+        /* Search & Filter */
+        .menu-search-wrap {
+            max-width: 800px;
+            margin: 0 auto 28px;
+        }
+
+        .search-field-wrap {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-field-wrap .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9A8A7A;
+            font-size: 1rem;
+        }
+
+        .search-field-wrap .clear-btn {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #9A8A7A;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: none;
+            padding: 4px;
+            border-radius: 50%;
+            transition: color 0.2s;
+        }
+
+        .search-field-wrap .clear-btn:hover { color: var(--danger); }
+
+        .menu-search-input {
+            width: 100%;
+            padding: 15px 50px;
+            border: 2px solid var(--gold-border);
+            border-radius: 50px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            background: var(--white);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 12px rgba(26,10,0,0.06);
+        }
+
+        .menu-search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(245,166,35,0.12);
+        }
+
+        .search-results-hint {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #8A7A6A;
+            margin-bottom: 16px;
+            min-height: 20px;
+        }
+
         .filter-tabs {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
             flex-wrap: wrap;
-            margin-bottom: 32px;
+            margin-bottom: 8px;
         }
 
         .filter-tab {
             background: var(--white);
             border: 1.5px solid var(--gold-border);
-            padding: 10px 22px;
+            padding: 9px 20px;
             border-radius: 50px;
             cursor: pointer;
             font-weight: 500;
             transition: all 0.2s;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .filter-tab:hover {
             border-color: var(--accent);
+            background: rgba(245,166,35,0.06);
         }
 
         .filter-tab.active {
             background: var(--accent);
             color: var(--white);
             border-color: var(--accent);
+        }
+
+        .filter-tab .tab-count {
+            background: rgba(255,255,255,0.25);
+            padding: 1px 7px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .filter-tab:not(.active) .tab-count {
+            background: rgba(245,166,35,0.12);
+            color: var(--accent);
         }
 
         .menu-list {
@@ -897,6 +896,39 @@
 
         .menu-item:hover {
             transform: translateX(4px);
+        }
+
+        .menu-item.unavailable {
+            opacity: 0.55;
+            background: #FAF6F2;
+            border-color: #E8D8C4;
+            cursor: default;
+        }
+
+        .menu-item.unavailable:hover {
+            transform: none;
+        }
+
+        .unavailable-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(192,57,43,0.1);
+            color: var(--danger);
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .dish-card.unavailable .dish-card-top {
+            filter: grayscale(60%);
+            opacity: 0.7;
+        }
+
+        .dish-card.unavailable {
+            opacity: 0.65;
         }
 
         .menu-icon-box {
@@ -1294,7 +1326,7 @@
 
     <!-- Navbar -->
     <nav class="navbar">
-        <a href="#" class="nav-logo" onclick="showPage('home'); return false;">🍛 Apus Kitchen</a>
+        <a href="#" class="nav-logo" onclick="showPage('home'); return false;">🍛 Apu's Kitchen</a>
         <ul class="nav-links">
             <li><a href="#" onclick="showPage('home'); return false;" id="nav-home" class="active">Home</a></li>
             <li><a href="#" onclick="showPage('menu'); return false;" id="nav-menu">Menu</a></li>
@@ -1383,11 +1415,11 @@
                 <div class="kitchen-text">
                     <span class="section-tag">🏠 About Us</span>
                     <h2 class="section-title">Made with Love & Tradition</h2>
-                    <p>Apus Kitchen started with a simple dream — to serve wholesome, home-cooked meals to busy
+                    <p>Apu's Kitchen started with a simple dream — to serve wholesome, home-cooked meals to busy
                         Mumbaikars who miss the taste of their mother's kitchen. Every dish is prepared fresh each
                         morning using traditional recipes passed down through generations.</p>
                     <p>We believe great food doesn't need fancy plating or exotic ingredients. It needs fresh produce,
-                        the right spices, and a whole lot of love. That's the Apus Kitchen promise.</p>
+                        the right spices, and a whole lot of love. That's the Apu's Kitchen promise.</p>
                     <div class="stats-grid">
                         <div class="stat-pill">500+ Customers</div>
                         <div class="stat-pill">5 yrs Experience</div>
@@ -1443,33 +1475,6 @@
                 <h2 class="section-title">Best Sellers</h2>
             </div>
             <div class="dishes-grid" id="best-sellers"></div>
-        </section>
-
-        <!-- Combo Builder -->
-        <section class="section" style="background: rgba(245,230,211,0.3);">
-            <div style="text-align:center; margin-bottom: 32px;">
-                <span class="section-tag">🛒 Build Your Tiffin</span>
-                <h2 class="section-title">Make It Yours</h2>
-            </div>
-            <div class="combo-builder">
-                <div class="combo-step">
-                    <h4>Step 1 — Choose Your Dal</h4>
-                    <div class="combo-options" id="dal-options"></div>
-                </div>
-                <div class="combo-step">
-                    <h4>Step 2 — Choose Your Sabzi</h4>
-                    <div class="combo-options" id="sabzi-options"></div>
-                </div>
-                <div class="combo-step">
-                    <h4>Step 3 — Roti / Rice (Multi-select)</h4>
-                    <div class="combo-options" id="bread-options"></div>
-                </div>
-                <div class="combo-total">
-                    <span class="label">Total</span>
-                    <span class="amount" id="combo-total">₹0</span>
-                </div>
-                <button class="btn-primary" style="width:100%; justify-content:center;" onclick="payCombo()">Add to Cart</button>
-            </div>
         </section>
 
         <!-- Reviews -->
@@ -1532,6 +1537,17 @@
             <p>Order by 10 AM for Lunch · 5 PM for Dinner</p>
         </div>
         <section class="section">
+            <!-- Search + Filter -->
+            <div class="menu-search-wrap">
+                <div class="search-field-wrap">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="menu-search-input" id="menu-search-input"
+                        placeholder="Search dishes, ingredients... e.g. 'paneer', 'rice', 'tiffin'"
+                        oninput="handleMenuSearch(this.value)" autocomplete="off">
+                    <button class="clear-btn" id="search-clear-btn" onclick="clearMenuSearch()" title="Clear search">×</button>
+                </div>
+                <div class="search-results-hint" id="search-hint"></div>
+            </div>
             <div class="filter-tabs" id="filter-tabs"></div>
             <div class="menu-list" id="menu-list"></div>
             <div class="menu-bottom-banner">
@@ -1602,7 +1618,7 @@
         const reviews = [
             { name: "Priya Sharma", loc: "Andheri West", stars: 5, text: "Finally found tiffin that tastes like my mom's cooking. The dal tadka is absolutely divine. Delivered hot and on time every single day!" },
             { name: "Rahul Mehta", loc: "Jogeshwari", stars: 5, text: "Been ordering for 3 months now. The consistency is amazing — same great taste, same generous portions. Best value for money in Mumbai." },
-            { name: "Sneha Patel", loc: "Goregaon", stars: 4, text: "As a working professional, Apus Kitchen has been a lifesaver. Fresh, hygienic, and that homestyle flavour is unmatched. Highly recommend!" },
+            { name: "Sneha Patel", loc: "Goregaon", stars: 4, text: "As a working professional, Apu's Kitchen has been a lifesaver. Fresh, hygienic, and that homestyle flavour is unmatched. Highly recommend!" },
             { name: "Amit Desai", loc: "Malad", stars: 5, text: "The festival thalis are a steal! Ordered the Navratri special and it was vrat-friendly yet so tasty. My whole family loved it." },
         ];
 
@@ -1622,24 +1638,98 @@
             { name: "Eid/Festival Special", desc: "Rich shahi menu with biryani, korma & phirni", price: 250, emoji: "🌙", gradient: "linear-gradient(135deg, #8A7AB8, #6A5A98)" },
         ];
 
-        const menuItems = [
-            { name: "Full Tiffin", desc: "Dal + Sabzi + 4 Roti + Rice + Salad", price: 150, cat: "tiffin", icon: "🍱", type: "veg" },
-            { name: "Half Tiffin", desc: "Dal + Sabzi + 2 Roti + Rice", price: 90, cat: "tiffin", icon: "🥡", type: "veg" },
-            { name: "Premium Thali", desc: "Dal Makhani + Paneer + 4 Roti + Rice + Raita + Sweet", price: 200, cat: "tiffin", icon: "🍽️", type: "veg" },
-            { name: "Dal Tadka", desc: "Yellow lentils tempered with garlic, cumin & ghee", price: 80, cat: "sabzi", icon: "🥣", type: "veg" },
-            { name: "Paneer Masala", desc: "Soft cottage cheese in rich tomato gravy", price: 110, cat: "sabzi", icon: "🧈", type: "veg" },
-            { name: "Aloo Gobhi", desc: "Potato & cauliflower dry sabzi", price: 75, cat: "sabzi", icon: "🥔", type: "veg" },
-            { name: "Chole", desc: "Spicy chickpeas in onion-tomato gravy", price: 90, cat: "sabzi", icon: "🍛", type: "veg" },
-            { name: "Mix Sabzi", desc: "Seasonal mixed vegetables", price: 75, cat: "sabzi", icon: "🥗", type: "veg" },
-            { name: "Jeera Rice", desc: "Fragrant basmati rice with cumin & ghee", price: 70, cat: "rice", icon: "🍚", type: "veg" },
-            { name: "Khichdi", desc: "Rice & lentils comfort bowl with ghee", price: 90, cat: "rice", icon: "🍲", type: "veg" },
-            { name: "Roti (4 pcs)", desc: "Fresh whole wheat rotis", price: 40, cat: "rice", icon: "🫓", type: "veg" },
-            { name: "Paratha (2 pcs)", desc: "Flaky layered parathas", price: 60, cat: "rice", icon: "🥞", type: "veg" },
-            { name: "Steamed Rice", desc: "Plain fluffy steamed rice", price: 50, cat: "rice", icon: "🍚", type: "veg" },
-            { name: "Poha", desc: "Flattened rice with peanuts & spices", price: 50, cat: "snacks", icon: "🥣", type: "veg" },
-            { name: "Upma", desc: "Semolina savoury breakfast", price: 55, cat: "snacks", icon: "🍲", type: "veg" },
-            { name: "Raita", desc: "Yogurt with cucumber & spices", price: 40, cat: "snacks", icon: "🥣", type: "veg" },
-        ];
+        let menuItems = [];
+
+        // Helper: normalize the available field from DB (handles true/false AND 1/0)
+        function isAvailable(val) {
+            if (val === null || val === undefined) return true; // default to available
+            return !!val; // converts 0 → false, 1 → true, false → false, true → true
+        }
+
+        // Fetch menu items from backend — called on every Menu page visit
+        async function fetchMenuItems() {
+            // Show loading state in menu list while fetching
+            const menuList = document.getElementById('menu-list');
+            if (menuList) {
+                menuList.innerHTML = `<div style="text-align:center; padding:50px 20px; color:#9A8A7A;">
+                    <div style="font-size:2rem; margin-bottom:10px; animation: spin 1s linear infinite; display:inline-block;">⏳</div>
+                    <p style="font-size:0.95rem;">Fetching today's menu...</p>
+                </div>`;
+            }
+
+            try {
+                const res = await fetch('http://localhost:5000/menu/items');
+                if (res.ok) {
+                    const data = await res.json();
+                    // Map backend fields to frontend format
+                    menuItems = data.map(item => ({
+                        id: item.id,
+                        name: item.name,
+                        desc: item.description || '',
+                        price: item.price,
+                        cat: (item.category || 'other').toLowerCase(),
+                        icon: getMenuIcon(item.name),
+                        type: 'veg',
+                        available: isAvailable(item.available)  // normalize 0/1 from DB
+                    }));
+                    console.log('Menu fetched from API:', menuItems.length, 'items');
+                } else {
+                    console.warn('API returned', res.status, '— using fallback menu');
+                    loadFallbackMenu();
+                }
+            } catch (error) {
+                console.warn('Cannot reach backend — using fallback menu:', error.message);
+                loadFallbackMenu();
+            }
+
+            // Always render after fetch (success or fallback)
+            renderFilterTabs();
+            renderMenu();
+            renderBestSellers(); // re-render best sellers with fresh availability data
+        }
+
+        // Map common dish names to emoji icons
+        function getMenuIcon(name) {
+            const n = (name || '').toLowerCase();
+            if (n.includes('tiffin'))    return '🍱';
+            if (n.includes('thali'))     return '🍽️';
+            if (n.includes('dal'))       return '🥣';
+            if (n.includes('paneer'))    return '🧈';
+            if (n.includes('aloo') || n.includes('potato')) return '🥔';
+            if (n.includes('chole') || n.includes('chickpea')) return '🍛';
+            if (n.includes('sabzi') || n.includes('veg')) return '🥗';
+            if (n.includes('rice') || n.includes('jeera') || n.includes('khichdi')) return '🍚';
+            if (n.includes('roti') || n.includes('chapati')) return '🫓';
+            if (n.includes('paratha'))   return '🥞';
+            if (n.includes('poha'))      return '🥣';
+            if (n.includes('upma'))      return '🍲';
+            if (n.includes('raita'))     return '🥛';
+            return '🍛';
+        }
+
+        function loadFallbackMenu() {
+            menuItems = [
+                { name: "Full Tiffin",     desc: "Dal + Sabzi + 4 Roti + Rice + Salad",                    price: 150, cat: "tiffin", icon: "🍱", type: "veg", available: true  },
+                { name: "Half Tiffin",     desc: "Dal + Sabzi + 2 Roti + Rice",                            price: 90,  cat: "tiffin", icon: "🥡", type: "veg", available: true  },
+                { name: "Premium Thali",   desc: "Dal Makhani + Paneer + 4 Roti + Rice + Raita + Sweet",  price: 200, cat: "tiffin", icon: "🍽️", type: "veg", available: true },
+                { name: "Dal Tadka",       desc: "Yellow lentils tempered with garlic, cumin & ghee",      price: 80,  cat: "sabzi",  icon: "🥣", type: "veg", available: true  },
+                { name: "Paneer Masala",   desc: "Soft cottage cheese in rich tomato gravy",               price: 110, cat: "sabzi",  icon: "🧈", type: "veg", available: true  },
+                { name: "Aloo Gobhi",      desc: "Potato & cauliflower dry sabzi",                         price: 75,  cat: "sabzi",  icon: "🥔", type: "veg", available: true  },
+                { name: "Chole",           desc: "Spicy chickpeas in onion-tomato gravy",                  price: 90,  cat: "sabzi",  icon: "🍛", type: "veg", available: true  },
+                { name: "Mix Sabzi",       desc: "Seasonal mixed vegetables",                              price: 75,  cat: "sabzi",  icon: "🥗", type: "veg", available: false },
+                { name: "Jeera Rice",      desc: "Fragrant basmati rice with cumin & ghee",                price: 70,  cat: "rice",   icon: "🍚", type: "veg", available: true  },
+                { name: "Khichdi",         desc: "Rice & lentils comfort bowl with ghee",                  price: 90,  cat: "rice",   icon: "🍲", type: "veg", available: true  },
+                { name: "Roti (4 pcs)",    desc: "Fresh whole wheat rotis",                                price: 40,  cat: "rice",   icon: "🫓", type: "veg", available: true  },
+                { name: "Paratha (2 pcs)", desc: "Flaky layered parathas",                                 price: 60,  cat: "rice",   icon: "🥞", type: "veg", available: true  },
+                { name: "Steamed Rice",    desc: "Plain fluffy steamed rice",                              price: 50,  cat: "rice",   icon: "🍚", type: "veg", available: true  },
+                { name: "Poha",            desc: "Flattened rice with peanuts & spices",                   price: 50,  cat: "snacks", icon: "🥣", type: "veg", available: true  },
+                { name: "Upma",            desc: "Semolina savoury breakfast",                             price: 55,  cat: "snacks", icon: "🍲", type: "veg", available: true  },
+                { name: "Raita",           desc: "Yogurt with cucumber & spices",                          price: 40,  cat: "snacks", icon: "🥣", type: "veg", available: true  },
+            ];
+            console.log('Loaded fallback menu items');
+            renderMenu();
+            renderFilterTabs();
+        }
 
         const dalOptions = [
             { name: "Dal Tadka", price: 80 },
@@ -1662,20 +1752,25 @@
         // ===================== RENDER =====================
         function renderBestSellers() {
             const container = document.getElementById('best-sellers');
-            container.innerHTML = bestSellers.map(d => `
-        <div class="dish-card">
-          <div class="dish-card-top" style="background: ${d.gradient};">${d.icon}</div>
-          <div class="dish-card-body">
-            <h3>${d.name}</h3>
-            <p>${d.desc}</p>
-            <span class="price">₹${d.price}</span>
-            <div class="dish-tags">
-              ${d.tags.map(t => `<span class="dish-tag ${t.includes('Hot') ? 'hot' : ''} ${t.includes('Veg') ? 'veg' : ''}">${t}</span>`).join('')}
-            </div>
-            <button class="btn-small" onclick="addToCart({name: '${d.name}', price: ${d.price}, icon: '${d.icon}'})">Add to Cart</button>
-          </div>
-        </div>
-      `).join('');
+            container.innerHTML = bestSellers.map(d => {
+                const live = menuItems.find(m => m.name === d.name);
+                const avail = live ? isAvailable(live.available) : true;
+                return `<div class="dish-card${avail ? '' : ' unavailable'}">
+                    <div class="dish-card-top" style="background: ${d.gradient};">${d.icon}</div>
+                    <div class="dish-card-body">
+                        <h3>${d.name}</h3>
+                        <p>${d.desc}</p>
+                        <span class="price">₹${d.price}</span>
+                        <div class="dish-tags">
+                        ${d.tags.map(t => `<span class="dish-tag ${t.includes('Hot') ? 'hot' : ''} ${t.includes('Veg') ? 'veg' : ''}">${t}</span>`).join('')}
+                        </div>
+                        ${avail
+                            ? `<button class="btn-small" onclick="addToCart({name: '${d.name}', price: ${d.price}, icon: '${d.icon}'})">Add to Cart</button>`
+                            : `<span class="unavailable-badge">⛔ Not Available Today</span>`
+                        }
+                    </div>
+                </div>`;
+            }).join('');
         }
 
         function renderReviews() {
@@ -1720,106 +1815,116 @@
       `).join('');
         }
 
-        // ===================== COMBO BUILDER =====================
-        let comboState = { dal: null, sabzi: null, bread: [] };
 
-        function renderComboOptions() {
-            const dalContainer = document.getElementById('dal-options');
-            const sabziContainer = document.getElementById('sabzi-options');
-            const breadContainer = document.getElementById('bread-options');
-
-            dalContainer.innerHTML = dalOptions.map((opt, i) => `
-        <label class="combo-option ${comboState.dal === i ? 'selected' : ''}">
-          <input type="radio" name="dal" ${comboState.dal === i ? 'checked' : ''} onchange="setDal(${i})">
-          <span class="opt-name">${opt.name}</span>
-          <span class="opt-price">₹${opt.price}</span>
-        </label>
-      `).join('');
-
-            sabziContainer.innerHTML = sabziOptions.map((opt, i) => `
-        <label class="combo-option ${comboState.sabzi === i ? 'selected' : ''}">
-          <input type="radio" name="sabzi" ${comboState.sabzi === i ? 'checked' : ''} onchange="setSabzi(${i})">
-          <span class="opt-name">${opt.name}</span>
-          <span class="opt-price">₹${opt.price}</span>
-        </label>
-      `).join('');
-
-            breadContainer.innerHTML = breadOptions.map((opt, i) => `
-        <label class="combo-option ${comboState.bread.includes(i) ? 'selected' : ''}">
-          <input type="checkbox" ${comboState.bread.includes(i) ? 'checked' : ''} onchange="toggleBread(${i})">
-          <span class="opt-name">${opt.name}</span>
-          <span class="opt-price">₹${opt.price}</span>
-        </label>
-      `).join('');
-
-            updateComboTotal();
-        }
-
-        function setDal(i) { comboState.dal = i; renderComboOptions(); }
-        function setSabzi(i) { comboState.sabzi = i; renderComboOptions(); }
-        function toggleBread(i) {
-            if (comboState.bread.includes(i)) comboState.bread = comboState.bread.filter(b => b !== i);
-            else comboState.bread.push(i);
-            renderComboOptions();
-        }
-
-        function updateComboTotal() {
-            let total = 0;
-            if (comboState.dal !== null) total += dalOptions[comboState.dal].price;
-            if (comboState.sabzi !== null) total += sabziOptions[comboState.sabzi].price;
-            comboState.bread.forEach(i => total += breadOptions[i].price);
-            document.getElementById('combo-total').textContent = '₹' + total;
-            return total;
-        }
-
-        function payCombo() {
-            const total = updateComboTotal();
-            if (total === 0) { showToast('Please select at least one item', 'error'); return; }
-            
-            // Build combo name
-            let comboName = 'Custom Tiffin Combo: ';
-            if (comboState.dal !== null) comboName += dalOptions[comboState.dal].name + ' + ';
-            if (comboState.sabzi !== null) comboName += sabziOptions[comboState.sabzi].name + ' + ';
-            comboState.bread.forEach(i => comboName += breadOptions[i].name + ', ');
-            comboName = comboName.slice(0, -2); // Remove last comma/space
-            
-            addToCart({name: comboName, price: total, icon: '🍱'});
-        }
 
         // ===================== MENU PAGE =====================
         let activeFilter = 'all';
+        let menuSearchQuery = '';
+
         const filters = [
-            { key: 'all', label: 'All Items' },
-            { key: 'tiffin', label: 'Tiffin Combos' },
-            { key: 'sabzi', label: 'Sabzi & Curry' },
-            { key: 'rice', label: 'Rice & Roti' },
-            { key: 'snacks', label: 'Snacks' },
+            { key: 'all',    label: 'All Items',     icon: '🍽️' },
+            { key: 'tiffin', label: 'Tiffin Combos', icon: '🍱' },
+            { key: 'sabzi',  label: 'Sabzi & Curry', icon: '🍛' },
+            { key: 'rice',   label: 'Rice & Roti',   icon: '🍚' },
+            { key: 'snacks', label: 'Snacks',         icon: '🥣' },
         ];
 
         function renderFilterTabs() {
             const container = document.getElementById('filter-tabs');
-            container.innerHTML = filters.map(f => `
-        <button class="filter-tab ${activeFilter === f.key ? 'active' : ''}" onclick="setFilter('${f.key}')">${f.label}</button>
-      `).join('');
+            container.innerHTML = filters.map(f => {
+                const all = f.key === 'all' ? menuItems : menuItems.filter(i => i.cat === f.key);
+                const availCount = all.filter(i => isAvailable(i.available)).length;
+                const totalCount = all.length;
+                const hasUnavail = totalCount > availCount;
+                return `<button class="filter-tab ${activeFilter === f.key ? 'active' : ''}" onclick="setFilter('${f.key}')">
+                    ${f.icon} ${f.label}
+                    <span class="tab-count">${availCount}${hasUnavail ? `<span title="${totalCount - availCount} unavailable"> +${totalCount - availCount}⛔</span>` : ''}</span>
+                </button>`;
+            }).join('');
         }
 
-        function setFilter(key) { activeFilter = key; renderFilterTabs(); renderMenu(); }
+        function setFilter(key) {
+            activeFilter = key;
+            renderFilterTabs();
+            renderMenu();
+        }
+
+        function handleMenuSearch(query) {
+            menuSearchQuery = query.trim().toLowerCase();
+            const clearBtn = document.getElementById('search-clear-btn');
+            if (clearBtn) clearBtn.style.display = menuSearchQuery ? 'block' : 'none';
+            renderMenu();
+        }
+
+        function clearMenuSearch() {
+            menuSearchQuery = '';
+            const input = document.getElementById('menu-search-input');
+            if (input) input.value = '';
+            const clearBtn = document.getElementById('search-clear-btn');
+            if (clearBtn) clearBtn.style.display = 'none';
+            renderMenu();
+        }
 
         function renderMenu() {
             const container = document.getElementById('menu-list');
-            const items = activeFilter === 'all' ? menuItems : menuItems.filter(i => i.cat === activeFilter);
-            container.innerHTML = items.map(item => `
-        <div class="menu-item">
-          <div class="menu-icon-box ${item.type}">${item.icon}</div>
-          <div class="menu-dot ${item.type}"></div>
-          <div class="menu-info">
-            <h4>${item.name}</h4>
-            <p>${item.desc}</p>
-          </div>
-          <span class="menu-price">₹${item.price}</span>
-          <button class="btn-small" onclick="addToCart({name: '${item.name}', price: ${item.price}, icon: '${item.icon}'})">Add to Cart</button>
-        </div>
-      `).join('');
+            const hint = document.getElementById('search-hint');
+
+            // Filter by category
+            let items = activeFilter === 'all' ? menuItems : menuItems.filter(i => i.cat === activeFilter);
+
+            // Filter by search query
+            if (menuSearchQuery) {
+                items = items.filter(i =>
+                    i.name.toLowerCase().includes(menuSearchQuery) ||
+                    i.desc.toLowerCase().includes(menuSearchQuery) ||
+                    i.cat.toLowerCase().includes(menuSearchQuery)
+                );
+            }
+
+            // Sort: available items first, unavailable last
+            items = [
+                ...items.filter(i => isAvailable(i.available)),
+                ...items.filter(i => !isAvailable(i.available))
+            ];
+
+            // Show hint
+            if (hint) {
+                if (menuSearchQuery) {
+                    const availCount = items.filter(i => isAvailable(i.available)).length;
+                    hint.textContent = items.length > 0
+                        ? `Found ${availCount} available result${availCount !== 1 ? 's' : ''} for "${menuSearchQuery}"${items.length > availCount ? ` (${items.length - availCount} not available today)` : ''}`
+                        : '';
+                } else {
+                    hint.textContent = '';
+                }
+            }
+
+            if (items.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:60px 20px; color:#9A8A7A;">
+                        <div style="font-size:3rem; margin-bottom:14px;">🔍</div>
+                        <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; color:#5A4A3A; margin-bottom:8px;">No dishes found</h3>
+                        <p>Try searching something else or <button onclick="clearMenuSearch()" style="background:none;border:none;color:var(--accent);font-weight:600;cursor:pointer;font-size:inherit;">clear the search</button></p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = items.map(item => {
+                const avail = isAvailable(item.available);
+                return `<div class="menu-item${avail ? '' : ' unavailable'}">
+                    <div class="menu-icon-box ${item.type}">${item.icon}</div>
+                    <div class="menu-dot ${item.type}"></div>
+                    <div class="menu-info">
+                        <h4>${item.name}</h4>
+                        <p>${item.desc}</p>
+                    </div>
+                    <span class="menu-price">₹${item.price}</span>
+                    ${avail
+                        ? `<button class="btn-small" onclick="addToCart({name: '${item.name}', price: ${item.price}, icon: '${item.icon}'})">Add to Cart</button>`
+                        : `<span class="unavailable-badge">⛔ Not Available</span>`
+                    }
+                </div>`;
+            }).join('');
         }
 
         // ===================== NAVIGATION =====================
@@ -1830,6 +1935,11 @@
             const navLink = document.getElementById('nav-' + name);
             if (navLink) navLink.classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Re-fetch fresh availability data every time user opens the menu page
+            if (name === 'menu') {
+                fetchMenuItems();
+            }
         }
 
         function toggleMobileMenu() {
@@ -2013,13 +2123,12 @@
         }
 
         // ===================== INIT =====================
-        renderBestSellers();
+        // Fetch live menu from backend (handles availability from DB)
+        fetchMenuItems();
         renderReviews();
         renderGallery();
         renderFestivals();
-        renderFilterTabs();
-        renderMenu();
-        renderComboOptions();
+        // renderBestSellers() is called inside fetchMenuItems() after data loads
     </script>
 </body>
 
