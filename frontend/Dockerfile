@@ -3,7 +3,7 @@
 # ==========================================
 # We use a Node image only to compile our code. 
 # We use "as build" to name this stage so we can reference it later.
-FROM node:18-alpine as build
+FROM node:20-alpine as build
 
 WORKDIR /app
 

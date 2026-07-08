@@ -5,7 +5,7 @@ from app.config.config import Config
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-    CORS(app, origins=["http://localhost:5173"])
+    CORS(app)
 
     # Register routes
     from app.routes.auth_routes import auth_bp
