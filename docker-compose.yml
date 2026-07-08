@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # ==========================================
+  # Database Service (PostgreSQL)
+  # ==========================================
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: tiffin_service
+    ports:
+      - "5432:5432"
+    volumes:
+      # This ensures database data is not lost when the container is stopped
+      - pgdata:/var/lib/postgresql/data
+
+  # ==========================================
+  # Backend Service (Flask API)
+  # ==========================================
+  backend:
+    build: .
+    restart: always
+    # Wait for the database container to start before starting the backend
+    depends_on:
+      - db
+    # We use env_file to load secrets like JWT_SECRET_KEY, but we explicitly
+    # override DATABASE_URL so it points to the "db" container instead of localhost
+    env_file:
+      - .env
+    environment:
+      # Format: postgresql://user:password@hostname:port/database_name
+      - DATABASE_URL=postgresql://admin:password123@db:5432/tiffin_service
+    ports:
+      - "5000:5000"
+
+  # ==========================================
+  # Frontend Service (React/Vite)
+  # ==========================================
+  frontend:
+    build: ./frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+# Define the named volume for database persistence
+volumes:
+  pgdata:
