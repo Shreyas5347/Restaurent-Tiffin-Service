@@ -1616,6 +1616,7 @@
     </div>
 
     <script>
+        const API_URL = "%VITE_API_URL%";
         // ===================== DATA =====================
         const bestSellers = [
             { name: "Full Tiffin", desc: "Dal + Sabzi + 4 Roti + Rice + Salad", price: 150, icon: "🍱", gradient: "linear-gradient(135deg, #E8B86D, #D4A017)", tags: ["⭐ #1", "💚 Veg", "Daily"] },
@@ -1669,7 +1670,7 @@
             }
 
             try {
-                const res = await fetch('http://localhost:5000/menu/items');
+                const res = await fetch(`${API_URL}/menu/items`);
                 if (res.ok) {
                     const data = await res.json();
                     // Map backend fields to frontend format
@@ -2078,7 +2079,7 @@
                     headers['Authorization'] = `Bearer ${token}`;
                 }
 
-                const response = await fetch('http://localhost:5000/orders/', {
+                const response = await fetch(`${API_URL}/orders/`, {
                     method: 'POST',
                     headers: headers,
                     body: JSON.stringify({
@@ -2096,7 +2097,7 @@
                         whatsappHeaders['Authorization'] = `Bearer ${token}`;
                     }
 
-                    const whatsappResponse = await fetch(`http://localhost:5000/orders/${data.order_id}/whatsapp`, {
+                    const whatsappResponse = await fetch(`${API_URL}/orders/${data.order_id}/whatsapp`, {
                         headers: whatsappHeaders
                     });
 

@@ -1157,6 +1157,7 @@
 <div class="toast-wrap" id="toast-wrap"></div>
 
 <script>
+const API_URL = "%VITE_API_URL%";
 // ============================================================
 //  STATE
 // ============================================================
@@ -1188,7 +1189,7 @@ let nextCatId = 5;
 // Fetch menu items from backend
 async function fetchMenuItems() {
     try {
-        const res = await fetch('http://localhost:5000/menu/items');
+        const res = await fetch(`${API_URL}/menu/items`);
         if (res.ok) {
             const data = await res.json();
             // Map backend data to frontend format
@@ -1267,7 +1268,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     const password = document.getElementById('admin-password').value;
 
     try {
-        const res = await fetch('http://localhost:5000/auth/admin-login', {
+        const res = await fetch(`${API_URL}/auth/admin-login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
@@ -1337,7 +1338,7 @@ function showPanel(name) {
 // ============================================================
 async function loadOrders() {
     try {
-        const res = await fetch('http://localhost:5000/orders/', {
+        const res = await fetch(`${API_URL}/orders/`, {
             headers: { 'Authorization': `Bearer ${adminToken}` }
         });
         const data = await res.json();
@@ -1425,7 +1426,7 @@ function orderActions(o) {
 
 async function updateOrderStatus(orderId, newStatus) {
     try {
-        const res = await fetch(`http://localhost:5000/orders/${orderId}/status`, {
+        const res = await fetch(`${API_URL}/orders/${orderId}/status`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
             body: JSON.stringify({ status: newStatus })
@@ -1534,7 +1535,7 @@ async function toggleAvailability(id, available) {
     if (label) label.textContent = available ? 'Available' : 'Off';
 
     try {
-        const res = await fetch(`http://localhost:5000/menu/items/${id}`, {
+        const res = await fetch(`${API_URL}/menu/items/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
