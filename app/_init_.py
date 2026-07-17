@@ -5,7 +5,10 @@ from app.config.config import Config
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-    CORS(app)
+
+    # Read allowed origins from env variable (supports comma-separated list)
+    origins = [o.strip() for o in Config.CORS_ORIGINS.split(",")]
+    CORS(app, resources={r"/*": {"origins": origins}}, supports_credentials=True)
 
     # Register routes
     from app.routes.auth_routes import auth_bp
