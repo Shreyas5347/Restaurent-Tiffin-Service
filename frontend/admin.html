@@ -1170,21 +1170,40 @@ let menuFilter = 'all';
 let menuSearch = '';
 
 // ============================================================
-//  CATEGORIES (Local data store)
+//  CATEGORIES (Persisted to localStorage)
 // ============================================================
-let categories = [
+const DEFAULT_CATEGORIES = [
     { id: 1, key: 'tiffin',  name: 'Tiffin Combos',  icon: '🍱' },
     { id: 2, key: 'sabzi',   name: 'Sabzi & Curry',   icon: '🍛' },
     { id: 3, key: 'rice',    name: 'Rice & Roti',     icon: '🍚' },
     { id: 4, key: 'snacks',  name: 'Snacks',          icon: '🥣' },
 ];
 
+function loadCategoriesFromStorage() {
+    try {
+        const saved = localStorage.getItem('adminCategories');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+    } catch {}
+    return DEFAULT_CATEGORIES.map(c => ({ ...c }));
+}
+
+function saveCategoriesToStorage() {
+    try {
+        localStorage.setItem('adminCategories', JSON.stringify(categories));
+    } catch {}
+}
+
+let categories = loadCategoriesFromStorage();
+
 // ============================================================
 //  MENU ITEMS (Fetched from backend API)
 // ============================================================
 let menuItems = [];
 let nextItemId = 17;
-let nextCatId = 5;
+let nextCatId = categories.length > 0 ? Math.max(...categories.map(c => c.id)) + 1 : 5;
 
 // Fetch menu items from backend
 async function fetchMenuItems() {
@@ -1785,6 +1804,7 @@ function saveCat(e) {
         showToast(`Category "${name}" added!`, 'success');
     }
 
+    saveCategoriesToStorage(); // ← persist to localStorage
     closeCatModal();
     renderCategoryManage();
     renderCategoryChips();
@@ -1803,6 +1823,7 @@ function confirmDeleteCat(id) {
     document.getElementById('confirm-ok-btn').innerHTML = '<i class="fas fa-trash"></i> Delete';
     confirmCallback = () => {
         categories = categories.filter(c => c.id !== id);
+        saveCategoriesToStorage(); // ← persist to localStorage
         showToast(`Category "${cat.name}" deleted`, 'info');
         renderCategoryManage();
         renderCategoryChips();
