@@ -1170,40 +1170,41 @@ let menuFilter = 'all';
 let menuSearch = '';
 
 // ============================================================
-//  CATEGORIES (Persisted to localStorage)
+//  CATEGORIES (Fetched from backend API)
 // ============================================================
-const DEFAULT_CATEGORIES = [
-    { id: 1, key: 'tiffin',  name: 'Tiffin Combos',  icon: '🍱' },
-    { id: 2, key: 'sabzi',   name: 'Sabzi & Curry',   icon: '🍛' },
-    { id: 3, key: 'rice',    name: 'Rice & Roti',     icon: '🍚' },
-    { id: 4, key: 'snacks',  name: 'Snacks',          icon: '🥣' },
-];
+let categories = [];
 
-function loadCategoriesFromStorage() {
+async function fetchCategories() {
     try {
-        const saved = localStorage.getItem('adminCategories');
-        if (saved) {
-            const parsed = JSON.parse(saved);
-            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        const res = await fetch(`${API_URL}/categories/`);
+        if (res.ok) {
+            categories = await res.json();
+            console.log('Fetched categories:', categories.length);
+        } else {
+            console.warn('Could not load categories from API, using defaults');
+            categories = [
+                { id: 1, key: 'tiffin', name: 'Tiffin Combos', icon: '\uD83C\uDF71' },
+                { id: 2, key: 'sabzi',  name: 'Sabzi & Curry',  icon: '\uD83C\uDF5B' },
+                { id: 3, key: 'rice',   name: 'Rice & Roti',    icon: '\uD83C\uDF5A' },
+                { id: 4, key: 'snacks', name: 'Snacks',         icon: '\uD83E\uDD63' },
+            ];
         }
-    } catch {}
-    return DEFAULT_CATEGORIES.map(c => ({ ...c }));
+    } catch {
+        console.warn('Category API unreachable, using defaults');
+        categories = [
+            { id: 1, key: 'tiffin', name: 'Tiffin Combos', icon: '\uD83C\uDF71' },
+            { id: 2, key: 'sabzi',  name: 'Sabzi & Curry',  icon: '\uD83C\uDF5B' },
+            { id: 3, key: 'rice',   name: 'Rice & Roti',    icon: '\uD83C\uDF5A' },
+            { id: 4, key: 'snacks', name: 'Snacks',         icon: '\uD83E\uDD63' },
+        ];
+    }
 }
-
-function saveCategoriesToStorage() {
-    try {
-        localStorage.setItem('adminCategories', JSON.stringify(categories));
-    } catch {}
-}
-
-let categories = loadCategoriesFromStorage();
 
 // ============================================================
 //  MENU ITEMS (Fetched from backend API)
 // ============================================================
 let menuItems = [];
 let nextItemId = 17;
-let nextCatId = categories.length > 0 ? Math.max(...categories.map(c => c.id)) + 1 : 5;
 
 // Fetch menu items from backend
 async function fetchMenuItems() {
@@ -1313,6 +1314,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 async function showAdmin() {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('admin-layout').classList.add('visible');
+    await fetchCategories();   // load categories from DB first
     await fetchMenuItems();
     loadOrders();
     renderMenu();
@@ -1789,22 +1791,56 @@ function closeCatModal() {
     editingCatId = null;
 }
 
-function saveCat(e) {
+async function saveCat(e) {
     e.preventDefault();
     const name = document.getElementById('cat-name').value.trim();
-    const icon = document.getElementById('cat-icon').value.trim();
+    const icon = document.getElementById('cat-icon').value.trim() || '\uD83C\uDF7D\uFE0F';
     const key  = document.getElementById('cat-key').value.trim().toLowerCase();
 
     if (editingCatId) {
-        const cat = categories.find(c => c.id === editingCatId);
-        if (cat) { Object.assign(cat, { name, icon, key }); }
-        showToast(`Category "${name}" updated!`, 'success');
+        // UPDATE via API
+        try {
+            const res = await fetch(`${API_URL}/categories/${editingCatId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+                body: JSON.stringify({ key, name, icon })
+            });
+            if (res.ok) {
+                const cat = categories.find(c => c.id === editingCatId);
+                if (cat) Object.assign(cat, { key, name, icon });
+                showToast(`Category "${name}" updated!`, 'success');
+            } else {
+                const err = await res.json().catch(() => ({}));
+                showToast(err.error || `Failed to update "${name}"`, 'error');
+                return;
+            }
+        } catch {
+            showToast('Server offline — category not saved', 'error');
+            return;
+        }
     } else {
-        categories.push({ id: nextCatId++, key, name, icon });
-        showToast(`Category "${name}" added!`, 'success');
+        // CREATE via API
+        try {
+            const res = await fetch(`${API_URL}/categories/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+                body: JSON.stringify({ key, name, icon })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                categories.push({ id: data.id, key, name, icon });
+                showToast(`Category "${name}" added!`, 'success');
+            } else {
+                const err = await res.json().catch(() => ({}));
+                showToast(err.error || `Failed to add "${name}"`, 'error');
+                return;
+            }
+        } catch {
+            showToast('Server offline — category not saved', 'error');
+            return;
+        }
     }
 
-    saveCategoriesToStorage(); // ← persist to localStorage
     closeCatModal();
     renderCategoryManage();
     renderCategoryChips();
@@ -1821,10 +1857,22 @@ function confirmDeleteCat(id) {
         ? `"${cat.name}" has ${inUse} menu item(s). Deleting it will leave those items uncategorised.`
         : `"${cat.name}" will be permanently deleted.`;
     document.getElementById('confirm-ok-btn').innerHTML = '<i class="fas fa-trash"></i> Delete';
-    confirmCallback = () => {
-        categories = categories.filter(c => c.id !== id);
-        saveCategoriesToStorage(); // ← persist to localStorage
-        showToast(`Category "${cat.name}" deleted`, 'info');
+    confirmCallback = async () => {
+        try {
+            const res = await fetch(`${API_URL}/categories/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${adminToken}` }
+            });
+            if (res.ok) {
+                categories = categories.filter(c => c.id !== id);
+                showToast(`Category "${cat.name}" deleted`, 'info');
+            } else {
+                const err = await res.json().catch(() => ({}));
+                showToast(err.error || `Failed to delete "${cat.name}"`, 'error');
+            }
+        } catch {
+            showToast('Server offline — category not deleted', 'error');
+        }
         renderCategoryManage();
         renderCategoryChips();
         renderMenu();

@@ -1833,13 +1833,40 @@
         let activeFilter = 'all';
         let menuSearchQuery = '';
 
-        const filters = [
-            { key: 'all',    label: 'All Items',     icon: '🍽️' },
-            { key: 'tiffin', label: 'Tiffin Combos', icon: '🍱' },
-            { key: 'sabzi',  label: 'Sabzi & Curry', icon: '🍛' },
-            { key: 'rice',   label: 'Rice & Roti',   icon: '🍚' },
-            { key: 'snacks', label: 'Snacks',         icon: '🥣' },
+        let filters = [
+            { key: 'all',    label: 'All Items',     icon: '🍽️' }
         ];
+
+        async function fetchCategories() {
+            try {
+                const res = await fetch(`${API_URL}/categories/`);
+                if (res.ok) {
+                    const data = await res.json();
+                    const dynamicFilters = data.map(c => ({
+                        key: c.key,
+                        label: c.name,
+                        icon: c.icon
+                    }));
+                    filters = [{ key: 'all', label: 'All Items', icon: '🍽️' }, ...dynamicFilters];
+                } else {
+                    console.warn('Failed to fetch categories, using defaults');
+                    useFallbackCategories();
+                }
+            } catch (err) {
+                console.warn('Category API unreachable, using defaults', err);
+                useFallbackCategories();
+            }
+        }
+
+        function useFallbackCategories() {
+            filters = [
+                { key: 'all',    label: 'All Items',     icon: '🍽️' },
+                { key: 'tiffin', label: 'Tiffin Combos', icon: '🍱' },
+                { key: 'sabzi',  label: 'Sabzi & Curry', icon: '🍛' },
+                { key: 'rice',   label: 'Rice & Roti',   icon: '🍚' },
+                { key: 'snacks', label: 'Snacks',         icon: '🥣' },
+            ];
+        }
 
         function renderFilterTabs() {
             const container = document.getElementById('filter-tabs');
@@ -2135,8 +2162,12 @@
         }
 
         // ===================== INIT =====================
-        // Fetch live menu from backend (handles availability from DB)
-        fetchMenuItems();
+        // Fetch live categories and menu from backend (handles availability from DB)
+        async function initializeApp() {
+            await fetchCategories();
+            await fetchMenuItems();
+        }
+        initializeApp();
         renderReviews();
         renderGallery();
         renderFestivals();
