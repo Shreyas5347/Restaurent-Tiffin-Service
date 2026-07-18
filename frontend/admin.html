@@ -1618,7 +1618,7 @@ function closeItemModal() {
     editingItemId = null;
 }
 
-function saveItem(e) {
+async function saveItem(e) {
     e.preventDefault();
     const name  = document.getElementById('item-name').value.trim();
     const icon  = document.getElementById('item-icon').value.trim();
@@ -1628,13 +1628,60 @@ function saveItem(e) {
     const type  = document.getElementById('item-type').value;
     const avail = document.getElementById('item-available').value === '1';
 
+    const payload = {
+        name,
+        description: desc,
+        price,
+        category: cat,
+        available: avail
+    };
+
     if (editingItemId) {
-        const item = menuItems.find(i => i.id === editingItemId);
-        if (item) { Object.assign(item, { name, icon, desc, price, cat, type, available: avail }); }
-        showToast(`"${name}" updated!`, 'success');
+        // ── UPDATE existing item via API ──
+        try {
+            const res = await fetch(`${API_URL}/menu/items/${editingItemId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+                body: JSON.stringify(payload)
+            });
+            if (res.ok) {
+                const item = menuItems.find(i => i.id === editingItemId);
+                if (item) { Object.assign(item, { name, icon, desc, price, cat, type, available: avail }); }
+                showToast(`"${name}" updated and saved!`, 'success');
+            } else {
+                const errData = await res.json().catch(() => ({}));
+                showToast(errData.error || `Failed to update "${name}"`, 'error');
+                return; // don't close modal on error
+            }
+        } catch {
+            // Network error — update locally
+            const item = menuItems.find(i => i.id === editingItemId);
+            if (item) { Object.assign(item, { name, icon, desc, price, cat, type, available: avail }); }
+            showToast(`"${name}" updated locally (server offline)`, 'info');
+        }
     } else {
-        menuItems.push({ id: nextItemId++, name, icon, desc, price, cat, type, available: avail });
-        showToast(`"${name}" added to menu!`, 'success');
+        // ── ADD new item via API ──
+        try {
+            const res = await fetch(`${API_URL}/menu/items`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+                body: JSON.stringify(payload)
+            });
+            if (res.ok) {
+                const data = await res.json();
+                const newId = data.item_id || nextItemId++;
+                menuItems.push({ id: newId, name, icon, desc, price, cat, type, available: avail });
+                showToast(`"${name}" added to menu!`, 'success');
+            } else {
+                const errData = await res.json().catch(() => ({}));
+                showToast(errData.error || `Failed to add "${name}"`, 'error');
+                return; // don't close modal on error
+            }
+        } catch {
+            // Network error — add locally
+            menuItems.push({ id: nextItemId++, name, icon, desc, price, cat, type, available: avail });
+            showToast(`"${name}" added locally (server offline)`, 'info');
+        }
     }
 
     closeItemModal();
@@ -1649,9 +1696,24 @@ function confirmDeleteItem(id) {
     document.getElementById('confirm-title').textContent = 'Delete Item?';
     document.getElementById('confirm-msg').textContent = `"${item.name}" will be permanently removed from the menu.`;
     document.getElementById('confirm-ok-btn').innerHTML = '<i class="fas fa-trash"></i> Delete';
-    confirmCallback = () => {
-        menuItems = menuItems.filter(i => i.id !== id);
-        showToast(`"${item.name}" deleted`, 'info');
+    confirmCallback = async () => {
+        try {
+            const res = await fetch(`${API_URL}/menu/items/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${adminToken}` }
+            });
+            if (res.ok) {
+                menuItems = menuItems.filter(i => i.id !== id);
+                showToast(`"${item.name}" deleted from menu`, 'info');
+            } else {
+                const errData = await res.json().catch(() => ({}));
+                showToast(errData.error || `Failed to delete "${item.name}"`, 'error');
+            }
+        } catch {
+            // Network error — delete locally
+            menuItems = menuItems.filter(i => i.id !== id);
+            showToast(`"${item.name}" removed locally (server offline)`, 'info');
+        }
         renderMenu();
         renderCategoryChips();
     };
