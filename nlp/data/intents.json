@@ -1,0 +1,64 @@
+{
+    "intents": [
+        {
+            "intent": "MENU_QUERY",
+            "examples": [
+                "What food do you have?",
+                "Show me the menu",
+                "What dishes are available?",
+                "What can I order?",
+                "Show your food items"
+            ]
+        },
+        {
+            "intent": "PRICE_QUERY",
+            "examples": [
+                "How much is the pizza?",
+                "What is the price of burger?",
+                "How much does paneer tikka cost?",
+                "Tell me the price of biryani",
+                "What does the pizza cost?"
+            ]
+        },
+        {
+            "intent": "DELIVERY_QUERY",
+            "examples": [
+                "Do you deliver?",
+                "Do you deliver to Nashik Road?",
+                "Is home delivery available?",
+                "Can you deliver food to my location?",
+                "Which areas do you deliver to?"
+            ]
+        },
+        {
+            "intent": "TIMING_QUERY",
+            "examples": [
+                "What time do you open?",
+                "When do you close?",
+                "What are your opening hours?",
+                "Are you open today?",
+                "What time does the restaurant close?"
+            ]
+        },
+        {
+            "intent": "ORDER_QUERY",
+            "examples": [
+                "I want to order a pizza",
+                "Can I order a burger?",
+                "I want to place an order",
+                "I want some food",
+                "I would like to order biryani"
+            ]
+        },
+        {
+            "intent": "RECOMMENDATION",
+            "examples": [
+                "What do you recommend?",
+                "Suggest something good",
+                "What should I eat?",
+                "Suggest a vegetarian dish",
+                "What is your best dish?"
+            ]
+        }
+    ]
+}

@@ -4,3 +4,7 @@ psycopg2-binary
 python-dotenv
 PyJWT
 gunicorn
+nltk
+spacy
+scikit-learn
+pandas
