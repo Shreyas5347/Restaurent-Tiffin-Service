@@ -13,11 +13,21 @@
         {
             "intent": "PRICE_QUERY",
             "examples": [
-                "How much is the pizza?",
-                "What is the price of burger?",
-                "How much does paneer tikka cost?",
-                "Tell me the price of biryani",
-                "What does the pizza cost?"
+                 "How much is the pizza?",
+        "What is the price of a burger?",
+        "How much does biryani cost?",
+        "Tell me the price of paneer tikka",
+        "What does pizza cost?",
+        "How expensive is the pizza?",
+        "How much will I pay for a burger?",
+        "What is the cost of biryani?",
+        "Tell me how much the pasta is",
+        "What are the prices of your dishes?",
+        "How much does a veg pizza cost?",
+        "Price of chicken biryani",
+        "Can you tell me the cost of pizza?",
+        "What is the burger price?",
+        "How much money do I need for pizza?"
             ]
         },
         {
@@ -43,11 +53,22 @@
         {
             "intent": "ORDER_QUERY",
             "examples": [
-                "I want to order a pizza",
-                "Can I order a burger?",
-                "I want to place an order",
-                "I want some food",
-                "I would like to order biryani"
+                 "I want to order a pizza",
+        "Can I order a burger?",
+        "I want to place an order",
+        "I would like to order food",
+        "I want some biryani",
+        "Can I get a pizza?",
+        "Can I have a burger?",
+        "Give me one pizza",
+        "I would like a pizza",
+        "I want two burgers",
+        "Please get me some food",
+        "I want to buy a pizza",
+        "Can you take my order?",
+        "I would like to place an order",
+        "I want chicken biryani",
+        "Add a pizza to my order"
             ]
         },
         {
@@ -59,6 +80,27 @@
                 "Suggest a vegetarian dish",
                 "What is your best dish?"
             ]
-        }
+        },
+        {
+    "intent": "FEEDBACK",
+    "examples": [
+         "I like your food",
+        "Your pizza is delicious",
+        "The food was amazing",
+        "I love your restaurant",
+        "The burger was great",
+        "The food was terrible",
+        "I did not like the pizza",
+        "The delivery was slow",
+        "The food was cold",
+        "The service was bad",
+        "The pizza tasted amazing",
+        "I had a great experience",
+        "Your food is horrible",
+        "The service was excellent",
+        "I will never order again",
+        "The taste was trash"
+    ]
+    }
     ]
 }

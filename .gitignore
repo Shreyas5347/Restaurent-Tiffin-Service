@@ -29,3 +29,4 @@ __pycache__/
 Thumbs.db
 .vscode/
 pyrefly.toml
+nltk_data/
