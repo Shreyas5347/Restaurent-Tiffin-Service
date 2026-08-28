@@ -47,6 +47,24 @@ The platform uses PostgreSQL for relational data management and implements authe
 
 [View Live Application →](https://apus-kitchen.king694779.workers.dev/)
 
+## 📸 Screenshots
+
+### Home Page
+
+![Home Page](screenshots/home.png)
+
+### Menu Page
+
+![Menu Page](screenshots/menu.png)
+
+### Order Page
+
+![Order Page](screenshots/order.png)
+
+### Admin Dashboard
+
+![Admin Dashboard](screenshots/admin-dashboard.png)
+
 ## ⚙️ Key Backend Concepts
 
 - RESTful API Development
