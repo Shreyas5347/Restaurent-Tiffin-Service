@@ -1,99 +1,96 @@
-# Tiffin Service Backend System
+# 🍽️ Restaurant & Tiffin Service Platform
 
-##  Problem
+A full-stack web application built to support a real-world restaurant and tiffin service startup. The platform provides a structured system for managing customers, menu items, orders, authentication, and payments.
 
-Small tiffin and food service businesses often rely on manual processes like phone calls or WhatsApp for managing orders and payments. This leads to:
+## 🚀 Features
 
-* No structured order tracking
-* Difficulty in managing multiple customers
-* Lack of online payment support
-* High chances of human error
+- User authentication and authorization
+- JWT-based authentication
+- Role-Based Access Control (RBAC)
+- Menu and food item management
+- Order management
+- Customer management
+- RESTful API architecture
+- PostgreSQL relational database
+- WhatsApp-based payment workflow
+- Responsive user interface
 
-I started building this project to apply my Flask knowledge in a real-world scenario while also creating a practical solution that could benefit my friend’s startup.
+## 🛠️ Tech Stack
 
----
+### Backend
+- Python
+- Flask
+- REST APIs
+- JWT Authentication
+- RBAC
 
-## Approach
+### Database
+- PostgreSQL
 
-I designed a "backend-first system" using:
+### Frontend
+- HTML
+- CSS
+- JavaScript
 
-* Flask (Python) → REST API development
-* PostgreSQL → Database for storing users, orders, and payments
-* Modular Architecture → Separation of routes, services, and database logic
-* Razorpay Integration (in progress) → For handling online payments
+### Tools & Deployment
+- Git
+- GitHub
+- Docker
 
-### Core Flow:
+## 📌 Project Overview
 
-1. User registers and logs in
-2. User creates an order
-3. Backend stores order details in database
-4. Payment flow is initiated (Razorpay)
-5. Webhook confirms payment and updates order status
+The application was developed as a production-oriented solution for a real-world restaurant and tiffin service startup. The backend follows a modular architecture and provides RESTful APIs for managing users, food items, orders, and related business operations.
 
----
+The platform uses PostgreSQL for relational data management and implements authentication and authorization mechanisms to secure application resources. Customers can complete the payment process through a WhatsApp-based payment workflow.
 
-##  Iterations
+## 🔗 Live Project
 
-This project was built incrementally:
+[View Live Application →](https://apus-kitchen.king694779.workers.dev/)
 
-* **Version 1:** Basic Flask setup and routing
-* **Version 2:** User authentication (register/login APIs)
-* **Version 3:** Order creation and database integration
-* **Version 4:** API structuring and modularization
-* **Current:** Integrating Razorpay payments and webhook handling
+## 📸 Screenshots
 
----
+### Home Page
 
-##  Key Design Choices
+![Home Page](screenshots/home.png)
 
-* Backend-controlled payments:
-  Amount is always fetched from the database to prevent tampering.
+### Menu Page
 
-* Webhook-based confirmation:
-  Payment success is confirmed using Razorpay webhook instead of trusting frontend responses.
+![Menu Page](screenshots/menu.png)
 
-* Separation of concerns:
-  Business logic is separated from routes to improve scalability and maintainability.
+### Order Page
 
-* Database-first validation:
-  All critical operations (orders, payments) rely on database state rather than client input.
+![Order Page](screenshots/order.png)
 
----
+### Admin Dashboard
 
-##  Current Status
+![Admin Dashboard](screenshots/admin-dashboard.png)
 
-*  User authentication implemented
-*  Order system implemented
-*  Razorpay order creation in progress
-*  Currently working on webhook integration — faced issues understanding how Razorpay verifies payment securely
+## ⚙️ Key Backend Concepts
 
----
+- RESTful API Development
+- CRUD Operations
+- JWT Authentication
+- Role-Based Access Control
+- Database Design
+- Transaction Management
+- API Integration
+- Modular Backend Architecture
 
-##  Daily Time Commitment
+## 📚 What I Learned
 
-Worked consistently 2–3 hours daily, focusing on understanding backend concepts while building the project step-by-step.
+Through this project, I gained practical experience in:
 
----
-
-##  Future Improvements
-
-* Complete Razorpay payment + webhook flow
-* Add order history for users
-* Build frontend (React or Android)
-* Add notifications (SMS/Email)
-* Improve error handling and logging
-
----
-
-##  Tech Stack
-
-* Python (Flask)
-* PostgreSQL
-* REST APIs
-* Razorpay (Payment Gateway - in progress)
+- Designing and building RESTful APIs
+- Working with PostgreSQL databases
+- Implementing authentication and authorization
+- Managing backend application architecture
+- Handling order-related database operations
+- Building and deploying a real-world application
 
 ---
 
-##  Note
+## 👨‍💻 Author
 
-This project is actively being developed with a focus on learning real-world backend architecture and secure payment handling.
+**Shreyas Rajput**
+
+GitHub: [@Shreyas5347](https://github.com/Shreyas5347)
