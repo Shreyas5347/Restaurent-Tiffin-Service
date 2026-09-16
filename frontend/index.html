@@ -1319,6 +1319,120 @@
                 padding: 100px 16px 70px;
             }
         }
+
+        /* ===== SHOP STATUS & TIMINGS ===== */
+        .shop-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            transition: all 0.3s ease;
+        }
+
+        .shop-status-pill.open {
+            background: rgba(39, 174, 96, 0.15);
+            color: #2ECC71;
+            border: 1px solid rgba(46, 204, 113, 0.4);
+        }
+
+        .shop-status-pill.closed {
+            background: rgba(231, 76, 60, 0.15);
+            color: #E74C3C;
+            border: 1px solid rgba(231, 76, 60, 0.4);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .shop-status-pill.open .status-dot {
+            background: #2ECC71;
+            box-shadow: 0 0 8px #2ECC71;
+            animation: pulse-green 2s infinite;
+        }
+
+        .shop-status-pill.closed .status-dot {
+            background: #E74C3C;
+            box-shadow: 0 0 8px #E74C3C;
+        }
+
+        @keyframes pulse-green {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(46, 204, 113, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+        }
+
+        .cart-timing-notice {
+            background: rgba(245, 166, 35, 0.12);
+            border: 1.5px solid var(--gold-border);
+            color: #6C4200;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.86rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            line-height: 1.4;
+        }
+
+        .cart-closed-notice {
+            background: #FDF2F2;
+            border: 1.5px solid #F8B4B4;
+            color: #9B1C1C;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.4;
+        }
+
+        .btn-location {
+            background: rgba(245, 166, 35, 0.08);
+            border: 1.5px dashed var(--accent);
+            color: var(--primary-dark);
+            padding: 10px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            justify-content: center;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-location:hover {
+            background: rgba(245, 166, 35, 0.18);
+            border-color: var(--cta);
+        }
+
+        .btn-location.active {
+            background: rgba(39, 174, 96, 0.12);
+            border: 1.5px solid var(--green);
+            color: var(--green);
+        }
+
+        .order-disabled-btn {
+            opacity: 0.65;
+            cursor: not-allowed !important;
+            background: #7F8C8D !important;
+            box-shadow: none !important;
+            transform: none !important;
+        }
     </style>
 </head>
 
@@ -1327,6 +1441,10 @@
     <!-- Navbar -->
     <nav class="navbar">
         <a href="#" class="nav-logo" onclick="showPage('home'); return false;">🍛 Apu's Kitchen</a>
+        <div id="nav-shop-status" class="shop-status-pill open" title="Ordering Status">
+            <span class="status-dot"></span>
+            <span id="nav-shop-status-text">Open: 10 AM - 2 PM</span>
+        </div>
         <ul class="nav-links">
             <li><a href="#" onclick="showPage('home'); return false;" id="nav-home" class="active">Home</a></li>
             <li><a href="#" onclick="showPage('menu'); return false;" id="nav-menu">Menu</a></li>
@@ -1345,6 +1463,10 @@
     <!-- Mobile Menu Overlay -->
     <div id="mobile-menu"
         style="display:none; position:fixed; top:64px; left:0; right:0; background:var(--primary-dark); z-index:999; padding:20px; flex-direction:column; gap:16px; border-top:1px solid rgba(245,166,35,0.2);">
+        <div id="mobile-shop-status" class="shop-status-pill open" style="align-self:flex-start;">
+            <span class="status-dot"></span>
+            <span id="mobile-shop-status-text">Open: 10 AM - 2 PM</span>
+        </div>
         <a href="#" onclick="showPage('home'); toggleMobileMenu(); return false;"
             style="color:var(--cream-dark); text-decoration:none; font-weight:500; font-size:1.1rem;">Home</a>
         <a href="#" onclick="showPage('menu'); toggleMobileMenu(); return false;"
@@ -1359,27 +1481,73 @@
     <div class="toast-container" id="toast-container"></div>
 
     <!-- Cart Modal -->
-    <div id="cart-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:3000; align-items:center; justify-content:center;">
-        <div style="background:var(--white); border-radius:20px; padding:30px; max-width:500px; width:90%; max-height:80vh; overflow-y:auto; border:2px solid var(--gold-border);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <h2 style="font-family:'Playfair Display', serif; font-size:1.5rem; color:var(--primary-dark);">Your Cart</h2>
-                <button onclick="toggleCart()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--primary-dark);">×</button>
+    <div id="cart-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6); z-index:3000; align-items:center; justify-content:center; backdrop-filter:blur(3px);">
+        <div style="background:var(--white); border-radius:24px; padding:28px 24px; max-width:520px; width:92%; max-height:88vh; overflow-y:auto; border:2px solid var(--gold-border); box-shadow:0 25px 60px rgba(0,0,0,0.3);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h2 style="font-family:'Playfair Display', serif; font-size:1.6rem; color:var(--primary-dark);">Your Cart 🍱</h2>
+                <button onclick="toggleCart()" style="background:none; border:none; font-size:1.8rem; cursor:pointer; color:var(--primary-dark); line-height:1;">&times;</button>
             </div>
-            <div style="margin-bottom:20px;">
-                <label style="display:block; font-weight:600; margin-bottom:8px; color:var(--primary-dark);">Your Name</label>
-                <input type="text" id="customer-name-input" placeholder="Enter your name" style="width:100%; padding:12px 16px; border:1.5px solid var(--gold-border); border-radius:12px; font-size:1rem; box-sizing:border-box;">
+
+            <!-- Timing Announcement Banner -->
+            <div class="cart-timing-notice">
+                <i class="fas fa-clock" style="color:var(--accent); font-size:1.2rem;"></i>
+                <div>
+                    <strong>Ordering Timings:</strong><br>
+                    Morning <strong>10:00 AM – 2:00 PM</strong> &bull; Evening <strong>6:00 PM – 10:00 PM</strong>
+                </div>
             </div>
-            <div id="cart-items" style="margin-bottom:20px;"></div>
-            <div style="display:flex; justify-content:space-between; align-items:center; padding-top:20px; border-top:2px solid var(--gold-border); margin-bottom:20px;">
+
+            <!-- Shop Closed Alert (shown dynamically when closed) -->
+            <div id="cart-closed-notice" class="cart-closed-notice" style="display:none;">
+                <i class="fas fa-store-slash" style="font-size:1.2rem; margin-top:2px;"></i>
+                <div>
+                    <strong>Shop is Currently Closed for Orders</strong>
+                    <p style="margin-top:2px; font-size:0.83rem;" id="cart-closed-msg">Orders are only accepted during Morning (10:00 AM – 2:00 PM) and Evening (6:00 PM – 10:00 PM) slots.</p>
+                </div>
+            </div>
+
+            <!-- Customer Name -->
+            <div style="margin-bottom:14px;">
+                <label style="display:block; font-weight:600; margin-bottom:6px; font-size:0.9rem; color:var(--primary-dark);">Your Name <span style="color:var(--danger); font-weight:bold;">*</span></label>
+                <input type="text" id="customer-name-input" placeholder="e.g. Rahul Sharma" style="width:100%; padding:11px 14px; border:1.5px solid var(--gold-border); border-radius:12px; font-size:0.95rem; font-family:inherit; box-sizing:border-box;">
+            </div>
+
+            <!-- Delivery Address (Optional) -->
+            <div style="margin-bottom:14px;">
+                <label style="display:block; font-weight:600; margin-bottom:6px; font-size:0.9rem; color:var(--primary-dark);">Delivery Address / Landmark <span style="font-size:0.8rem; color:#8A7A6A; font-weight:normal;">(Optional)</span></label>
+                <textarea id="customer-address-input" rows="2" placeholder="e.g. Flat 302, Sai Residency, Near Station, Andheri West" style="width:100%; padding:10px 14px; border:1.5px solid var(--gold-border); border-radius:12px; font-size:0.95rem; font-family:inherit; resize:vertical; box-sizing:border-box;"></textarea>
+            </div>
+
+            <!-- Location Sharing (Optional) -->
+            <div style="margin-bottom:18px;">
+                <label style="display:block; font-weight:600; margin-bottom:6px; font-size:0.9rem; color:var(--primary-dark);">Live Location <span style="font-size:0.8rem; color:#8A7A6A; font-weight:normal;">(Optional)</span></label>
+                <button type="button" id="btn-share-location" class="btn-location" onclick="captureLocation()">
+                    <i class="fas fa-location-crosshairs"></i>
+                    <span id="location-btn-text">📍 Share Current Location</span>
+                </button>
+                <div id="location-status" style="font-size:0.82rem; color:#27AE60; font-weight:600; margin-top:6px; display:none; display:flex; align-items:center; gap:6px;">
+                    <i class="fas fa-check-circle"></i> <span>Location captured!</span>
+                    <button type="button" onclick="clearLocation()" style="background:none; border:none; color:#C0392B; text-decoration:underline; font-size:0.8rem; cursor:pointer; margin-left:auto;">Remove</button>
+                </div>
+                <p style="font-size:0.78rem; color:#8A7A6A; margin-top:5px; line-height:1.3;">
+                    💡 <em>Not compulsory &mdash; you can also share your address or location directly on WhatsApp.</em>
+                </p>
+            </div>
+
+            <div id="cart-items" style="margin-bottom:16px;"></div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; padding-top:16px; border-top:2px solid var(--gold-border); margin-bottom:18px;">
                 <span style="font-weight:600; font-size:1.1rem;">Total</span>
                 <span id="cart-total" style="font-size:1.6rem; color:var(--cta); font-weight:700; font-family:'Playfair Display', serif;">₹0</span>
             </div>
+
             <button 
-    class="btn-primary" 
-    style="width:100%; justify-content:center; color:#B65A1D;"
-    onclick="placeOrder()">
-    Place Order 🍽️
-</button>
+                id="btn-place-order"
+                class="btn-primary" 
+                style="width:100%; justify-content:center; color:#B65A1D; font-size:1rem; padding:14px 20px;"
+                onclick="placeOrder()">
+                Place Order 🍽️
+            </button>
         </div>
     </div>
 
@@ -1449,7 +1617,7 @@
                 <span class="section-tag">📅 Today's Special</span>
                 <h2 class="section-title">What's Fresh Today?</h2>
             </div>
-            <div class="urgency-banner">Order by 10 AM for Lunch · 5 PM for Dinner</div>
+            <div class="urgency-banner">Morning Slot: 10:00 AM – 2:00 PM &bull; Evening Slot: 6:00 PM – 10:00 PM</div>
             <div class="special-cards">
                 <div class="special-card">
                     <span class="live-badge">LIVE TODAY</span>
@@ -1474,7 +1642,7 @@
                 </div>
             </div>
             <div style="text-align:center; margin-bottom: 20px;">
-                <div class="countdown-box" id="countdown">Next order slot in: <span id="timer">--:--:--</span></div>
+                <div class="countdown-box" id="countdown"><span id="countdown-label">Next order slot in:</span> <span id="timer">--:--:--</span></div>
             </div>
             <div style="text-align:center;">
                 <button class="btn-primary" onclick="showPage('menu')">Order Today's Combo</button>
@@ -1547,7 +1715,7 @@
     <div id="page-menu" class="page">
         <div class="menu-hero">
             <h1>What's Cooking Today?</h1>
-            <p>Order by 10 AM for Lunch · 5 PM for Dinner</p>
+            <p>Morning Slot: 10:00 AM – 2:00 PM &bull; Evening Slot: 6:00 PM – 10:00 PM</p>
         </div>
         <section class="section">
             <!-- Search + Filter -->
@@ -1597,14 +1765,14 @@
                 <div class="info-card">
                     <div class="icon"><i class="fas fa-clock"></i></div>
                     <h4>Order Timings</h4>
-                    <p>Lunch by 10 AM · Dinner by 5 PM</p>
+                    <p>Morning: 10:00 AM – 2:00 PM<br>Evening: 6:00 PM – 10:00 PM</p>
                 </div>
             </div>
             <div class="hours-card">
                 <h4>Kitchen Hours</h4>
-                <div class="hours-row"><span class="day">Monday – Friday</span><span>8 AM – 9 PM</span></div>
-                <div class="hours-row"><span class="day">Saturday</span><span>9 AM – 8 PM</span></div>
-                <div class="hours-row"><span class="day">Sunday</span><span>10 AM – 6 PM</span></div>
+                <div class="hours-row"><span class="day">Morning Slot</span><span>10:00 AM – 2:00 PM</span></div>
+                <div class="hours-row"><span class="day">Evening Slot</span><span>6:00 PM – 10:00 PM</span></div>
+                <div class="hours-row"><span class="day">Service</span><span>Open Daily (Mon – Sun)</span></div>
             </div>
             <div class="social-row">
                 <a href="https://instagram.com/apuskitchen" target="_blank" class="social-btn insta"><i
@@ -1988,26 +2156,194 @@
             menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
         }
 
-        // ===================== COUNTDOWN =====================
+        // ===================== COUNTDOWN & SHOP TIMINGS =====================
+        // Operating slots: Morning 10:00 - 14:00 | Evening 18:00 - 22:00
         function updateCountdown() {
             const now = new Date();
-            const targets = [10, 17]; // 10 AM and 5 PM
-            let nextHour = targets.find(h => h > now.getHours()) || targets[0] + 24;
-            let diff;
-            if (nextHour > 23) {
-                diff = ((24 - now.getHours()) + targets[0]) * 3600000 - now.getMinutes() * 60000 - now.getSeconds() * 1000;
+            const currentHour = now.getHours();
+            const currentMin = now.getMinutes();
+            const currentSec = now.getSeconds();
+            const currentTimeDec = currentHour + currentMin / 60 + currentSec / 3600;
+
+            let targetHour = 10;
+            let label = "Next order slot in:";
+
+            if (currentTimeDec >= 10 && currentTimeDec < 14) {
+                // Inside Morning slot (10 AM - 2 PM)
+                targetHour = 14;
+                label = "Morning slot closes in:";
+            } else if (currentTimeDec >= 14 && currentTimeDec < 18) {
+                // Between lunch & dinner
+                targetHour = 18;
+                label = "Evening slot opens in:";
+            } else if (currentTimeDec >= 18 && currentTimeDec < 22) {
+                // Inside Evening slot (6 PM - 10 PM)
+                targetHour = 22;
+                label = "Evening slot closes in:";
             } else {
-                diff = (nextHour - now.getHours()) * 3600000 - now.getMinutes() * 60000 - now.getSeconds() * 1000;
+                // After 10 PM or before 10 AM -> targets 10 AM
+                targetHour = 10;
+                label = "Morning slot opens in:";
             }
-            const hrs = Math.floor(diff / 3600000);
-            const mins = Math.floor((diff % 3600000) / 60000);
-            const secs = Math.floor((diff % 60000) / 1000);
-            document.getElementById('timer').textContent =
-                String(hrs).padStart(2, '0') + ':' + String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+
+            let diffMs;
+            if (currentTimeDec >= 22) {
+                // After 10 PM until midnight + 10 hours
+                diffMs = ((24 - currentHour) + 10) * 3600000 - currentMin * 60000 - currentSec * 1000;
+            } else {
+                diffMs = (targetHour - currentHour) * 3600000 - currentMin * 60000 - currentSec * 1000;
+            }
+
+            if (diffMs < 0) diffMs = 0;
+
+            const hrs = Math.floor(diffMs / 3600000);
+            const mins = Math.floor((diffMs % 3600000) / 60000);
+            const secs = Math.floor((diffMs % 60000) / 1000);
+
+            const timerEl = document.getElementById('timer');
+            const labelEl = document.getElementById('countdown-label');
+            if (timerEl) {
+                timerEl.textContent = String(hrs).padStart(2, '0') + ':' + String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+            }
+            if (labelEl) {
+                labelEl.textContent = label;
+            }
         }
 
         setInterval(updateCountdown, 1000);
         updateCountdown();
+
+        // ===================== SHOP STATUS =====================
+        let shopStatus = {
+            is_open: true,
+            mode: 'auto',
+            current_slot: null,
+            status_message: 'Open for orders'
+        };
+
+        // Check if current client time is within 10-2 or 6-10
+        function isLocalTimeInOperatingHours() {
+            const now = new Date();
+            const h = now.getHours() + now.getMinutes() / 60;
+            return (h >= 10 && h < 14) || (h >= 18 && h < 22);
+        }
+
+        async function fetchShopStatus() {
+            try {
+                const res = await fetch(`${API_URL}/settings/status`);
+                if (res.ok) {
+                    const data = await res.json();
+                    shopStatus = data;
+                } else {
+                    shopStatus.is_open = isLocalTimeInOperatingHours();
+                    shopStatus.status_message = shopStatus.is_open ? 'Open: Accepting Orders' : 'Closed: 10 AM - 2 PM & 6 PM - 10 PM';
+                }
+            } catch (err) {
+                // Fallback to local time checking
+                shopStatus.is_open = isLocalTimeInOperatingHours();
+                shopStatus.status_message = shopStatus.is_open ? 'Open: Accepting Orders' : 'Closed: 10 AM - 2 PM & 6 PM - 10 PM';
+            }
+            renderShopStatusUI();
+        }
+
+        function renderShopStatusUI() {
+            const navPill = document.getElementById('nav-shop-status');
+            const navText = document.getElementById('nav-shop-status-text');
+            const mobPill = document.getElementById('mobile-shop-status');
+            const mobText = document.getElementById('mobile-shop-status-text');
+            const cartNotice = document.getElementById('cart-closed-notice');
+            const cartMsg = document.getElementById('cart-closed-msg');
+            const placeBtn = document.getElementById('btn-place-order');
+
+            const isOpen = !!shopStatus.is_open;
+            const text = isOpen 
+                ? (shopStatus.current_slot ? `Open: ${shopStatus.current_slot}` : 'Open: Accepting Orders')
+                : 'Closed: 10 AM-2 PM & 6-10 PM';
+
+            // Navbar pill
+            if (navPill && navText) {
+                navPill.className = 'shop-status-pill ' + (isOpen ? 'open' : 'closed');
+                navText.textContent = text;
+            }
+            // Mobile pill
+            if (mobPill && mobText) {
+                mobPill.className = 'shop-status-pill ' + (isOpen ? 'open' : 'closed');
+                mobText.textContent = text;
+            }
+
+            // Cart Modal closed notice & button state
+            if (cartNotice) {
+                cartNotice.style.display = isOpen ? 'none' : 'flex';
+                if (cartMsg) {
+                    cartMsg.textContent = shopStatus.status_message || 'Orders are only accepted during Morning (10:00 AM – 2:00 PM) and Evening (6:00 PM – 10:00 PM) slots.';
+                }
+            }
+
+            if (placeBtn) {
+                if (isOpen) {
+                    placeBtn.disabled = false;
+                    placeBtn.classList.remove('order-disabled-btn');
+                    placeBtn.innerHTML = 'Place Order 🍽️';
+                } else {
+                    placeBtn.disabled = true;
+                    placeBtn.classList.add('order-disabled-btn');
+                    placeBtn.innerHTML = '🔒 Shop Currently Closed';
+                }
+            }
+        }
+
+        // ===================== GEOLOCATION SHARING =====================
+        let capturedLocationUrl = null;
+
+        function captureLocation() {
+            const btn = document.getElementById('btn-share-location');
+            const btnText = document.getElementById('location-btn-text');
+            const statusDiv = document.getElementById('location-status');
+
+            if (!navigator.geolocation) {
+                showToast('Geolocation is not supported by your browser', 'error');
+                return;
+            }
+
+            if (btnText) btnText.textContent = '📡 Locating...';
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude.toFixed(6);
+                    const lng = position.coords.longitude.toFixed(6);
+                    capturedLocationUrl = `https://maps.google.com/?q=${lat},${lng}`;
+
+                    if (btn) btn.classList.add('active');
+                    if (btnText) btnText.innerHTML = `✅ Location Attached (${lat}, ${lng})`;
+                    if (statusDiv) {
+                        statusDiv.style.display = 'flex';
+                        statusDiv.innerHTML = `<span><i class="fas fa-map-marker-alt"></i> Coordinates: <strong>${lat}, ${lng}</strong> (<a href="${capturedLocationUrl}" target="_blank" style="color:#27AE60;">Preview Map</a>)</span> <button type="button" onclick="clearLocation()" style="background:none; border:none; color:#C0392B; text-decoration:underline; font-size:0.8rem; cursor:pointer; margin-left:auto;">Remove</button>`;
+                    }
+                    showToast('Location captured successfully!', 'success');
+                },
+                (error) => {
+                    if (btnText) btnText.textContent = '📍 Share Current Location';
+                    let errorMsg = 'Unable to get location. You can type your address or share in WhatsApp.';
+                    if (error.code === error.PERMISSION_DENIED) {
+                        errorMsg = 'Location permission denied. You can enter your address manually.';
+                    }
+                    showToast(errorMsg, 'error');
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+            );
+        }
+
+        function clearLocation() {
+            capturedLocationUrl = null;
+            const btn = document.getElementById('btn-share-location');
+            const btnText = document.getElementById('location-btn-text');
+            const statusDiv = document.getElementById('location-status');
+
+            if (btn) btn.classList.remove('active');
+            if (btnText) btnText.textContent = '📍 Share Current Location';
+            if (statusDiv) statusDiv.style.display = 'none';
+            showToast('Location removed', 'info');
+        }
 
         // ===================== CART =====================
         let cart = [];
@@ -2040,20 +2376,27 @@
             }
 
             if (cartItems) {
-                cartItems.innerHTML = cart.map((item, index) => `
-                    <div class="cart-item">
-                        <div class="cart-item-info">
-                            <span class="cart-item-name">${item.name}</span>
-                            <span class="cart-item-price">₹${item.price * item.quantity}</span>
+                if (cart.length === 0) {
+                    cartItems.innerHTML = `<div style="text-align:center; padding:24px 10px; color:#8A7A6A;">
+                        <div style="font-size:2rem; margin-bottom:6px;">🛒</div>
+                        <p style="font-size:0.92rem;">Your cart is empty. Add delicious meals from our menu!</p>
+                    </div>`;
+                } else {
+                    cartItems.innerHTML = cart.map((item, index) => `
+                        <div class="cart-item">
+                            <div class="cart-item-info">
+                                <span class="cart-item-name">${item.name}</span>
+                                <span class="cart-item-price">₹${item.price * item.quantity}</span>
+                            </div>
+                            <div class="cart-item-controls">
+                                <button class="cart-btn" onclick="decreaseQuantity(${index})">-</button>
+                                <span class="cart-quantity">${item.quantity}</span>
+                                <button class="cart-btn" onclick="increaseQuantity(${index})">+</button>
+                                <button class="cart-btn remove" onclick="removeFromCart(${index})">×</button>
+                            </div>
                         </div>
-                        <div class="cart-item-controls">
-                            <button class="cart-btn" onclick="decreaseQuantity(${index})">-</button>
-                            <span class="cart-quantity">${item.quantity}</span>
-                            <button class="cart-btn" onclick="increaseQuantity(${index})">+</button>
-                            <button class="cart-btn remove" onclick="removeFromCart(${index})">×</button>
-                        </div>
-                    </div>
-                `).join('');
+                    `).join('');
+                }
             }
 
             if (cartTotal) {
@@ -2078,10 +2421,20 @@
 
         function toggleCart() {
             const cartModal = document.getElementById('cart-modal');
-            cartModal.style.display = cartModal.style.display === 'flex' ? 'none' : 'flex';
+            const isOpening = cartModal.style.display !== 'flex';
+            cartModal.style.display = isOpening ? 'flex' : 'none';
+            if (isOpening) {
+                fetchShopStatus(); // refresh live open/closed status whenever user opens cart
+            }
         }
 
         async function placeOrder() {
+            // Validate shop status
+            if (!shopStatus.is_open) {
+                showToast('We are currently closed for orders. Timings: 10 AM - 2 PM & 6 PM - 10 PM', 'error');
+                return;
+            }
+
             if (cart.length === 0) {
                 showToast('Your cart is empty', 'error');
                 return;
@@ -2094,14 +2447,21 @@
                 return;
             }
 
-            // Convert cart items to API format (using actual menu_item_id)
+            const customerAddress = document.getElementById('customer-address-input')?.value?.trim() || null;
+
+            // Convert cart items to API format
             const items = cart.map(item => ({
-                menu_item_id: item.id || 1, // Use actual database ID, fallback to 1 if using fallback menu
+                menu_item_id: item.id || 1,
                 quantity: item.quantity
             }));
 
+            const placeBtn = document.getElementById('btn-place-order');
+            if (placeBtn) {
+                placeBtn.disabled = true;
+                placeBtn.innerHTML = 'Placing Order... ⏳';
+            }
+
             try {
-                // Create order without auth (guest checkout)
                 const headers = { 'Content-Type': 'application/json' };
                 const token = localStorage.getItem('token');
                 if (token) {
@@ -2112,8 +2472,10 @@
                     method: 'POST',
                     headers: headers,
                     body: JSON.stringify({
-                        customer_name: customerName,
-                        items: items
+                        customer_name: customerName.trim(),
+                        items: items,
+                        address: customerAddress,
+                        location_url: capturedLocationUrl
                     })
                 });
 
@@ -2133,12 +2495,14 @@
                     const whatsappData = await whatsappResponse.json();
 
                     if (whatsappResponse.ok) {
-                        // Clear cart and redirect to WhatsApp
+                        // Clear cart & inputs
                         cart = [];
                         updateCartUI();
-                        toggleCart();
-                        // Clear name input
                         document.getElementById('customer-name-input').value = '';
+                        const addressInput = document.getElementById('customer-address-input');
+                        if (addressInput) addressInput.value = '';
+                        clearLocation();
+                        toggleCart();
                         window.open(whatsappData.whatsapp_url, '_blank');
                         showToast('Order placed! Redirecting to WhatsApp...', 'success');
                     } else {
@@ -2150,6 +2514,8 @@
             } catch (error) {
                 showToast('Error placing order. Please try again.', 'error');
                 console.error(error);
+            } finally {
+                renderShopStatusUI();
             }
         }
 
@@ -2164,8 +2530,8 @@
         }
 
         // ===================== INIT =====================
-        // Fetch live categories and menu from backend (handles availability from DB)
         async function initializeApp() {
+            await fetchShopStatus();
             await fetchCategories();
             await fetchMenuItems();
         }

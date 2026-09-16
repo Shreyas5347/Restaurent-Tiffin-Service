@@ -33,6 +33,12 @@ def place_order_route():
 
     customer_name = data["customer_name"].strip()
     items = data["items"]
+    address = data.get("address")
+    if address:
+        address = str(address).strip() or None
+    location_url = data.get("location_url")
+    if location_url:
+        location_url = str(location_url).strip() or None
 
     if not isinstance(items, list) or len(items) == 0:
         return jsonify({"error": "'items' must be a non-empty list"}), 400
@@ -57,7 +63,7 @@ def place_order_route():
             pass  # Use guest user if token is invalid
 
     try:
-        result = place_order(user_id, customer_name, items)
+        result = place_order(user_id, customer_name, items, address=address, location_url=location_url)
         return jsonify({
             "message": "Order placed successfully",
             "order_id": result["order_id"],

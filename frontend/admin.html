@@ -903,6 +903,36 @@
             <!-- ===== PANEL: DASHBOARD ===== -->
             <div class="panel active" id="panel-dashboard">
 
+                <!-- Shop Status & Override Controls -->
+                <div class="shop-control-card" style="background:var(--white); border-radius:18px; padding:22px 24px; border:2px solid var(--gold-border); box-shadow:var(--card-shadow); margin-bottom:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+                    <div style="display:flex; align-items:center; gap:16px;">
+                        <div style="width:50px; height:50px; border-radius:14px; background:rgba(245,166,35,0.15); color:var(--accent); display:flex; align-items:center; justify-content:center; font-size:1.5rem;">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <div>
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <h3 style="font-size:1.2rem; margin:0;">Store Ordering Status</h3>
+                                <span id="admin-shop-badge" style="padding:4px 12px; border-radius:50px; font-size:0.8rem; font-weight:700; background:rgba(39,174,96,0.15); color:#27AE60; border:1px solid rgba(39,174,96,0.3);">🟢 OPEN</span>
+                            </div>
+                            <p id="admin-shop-subtitle" style="font-size:0.88rem; color:#7A6A5A; margin-top:3px; margin-bottom:0;">
+                                Schedule: Morning 10:00 AM – 2:00 PM &bull; Evening 6:00 PM – 10:00 PM
+                            </p>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                        <span style="font-size:0.85rem; font-weight:600; color:#5A4A3A; margin-right:4px;">Override Mode:</span>
+                        <button class="btn btn-outline" id="btn-mode-auto" onclick="setAdminShopMode('auto')" style="font-size:0.85rem; padding:8px 14px;">
+                            ⏱️ Auto Schedule
+                        </button>
+                        <button class="btn btn-outline" id="btn-mode-open" onclick="setAdminShopMode('open')" style="font-size:0.85rem; padding:8px 14px;">
+                            🟢 Force Open
+                        </button>
+                        <button class="btn btn-outline" id="btn-mode-closed" onclick="setAdminShopMode('closed')" style="font-size:0.85rem; padding:8px 14px;">
+                            🔴 Force Closed
+                        </button>
+                    </div>
+                </div>
+
                 <div class="stats-row">
                     <div class="stat-card total">
                         <div class="stat-icon" style="background:var(--accent-light); color:var(--accent);">
@@ -1314,6 +1344,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 async function showAdmin() {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('admin-layout').classList.add('visible');
+    await fetchAdminShopStatus(); // Fetch shop open/close status
     await fetchCategories();   // load categories from DB first
     await fetchMenuItems();
     loadOrders();
@@ -1328,6 +1359,106 @@ function logout() {
     document.getElementById('admin-layout').classList.remove('visible');
     document.getElementById('login-screen').style.display = 'flex';
     showToast('Logged out', 'info');
+}
+
+// ============================================================
+//  SHOP OPEN/CLOSE ADMIN MANAGEMENT
+// ============================================================
+let adminShopStatus = { is_open: true, mode: 'auto' };
+
+async function fetchAdminShopStatus() {
+    try {
+        const res = await fetch(`${API_URL}/settings/status`);
+        if (res.ok) {
+            adminShopStatus = await res.json();
+            renderAdminShopUI();
+        }
+    } catch (err) {
+        console.warn('Error fetching shop status:', err);
+    }
+}
+
+function renderAdminShopUI() {
+    const badge = document.getElementById('admin-shop-badge');
+    const subtitle = document.getElementById('admin-shop-subtitle');
+    const btnAuto = document.getElementById('btn-mode-auto');
+    const btnOpen = document.getElementById('btn-mode-open');
+    const btnClosed = document.getElementById('btn-mode-closed');
+
+    const mode = adminShopStatus.mode || 'auto';
+    const isOpen = !!adminShopStatus.is_open;
+
+    if (badge) {
+        if (mode === 'open') {
+            badge.style.background = 'rgba(39,174,96,0.15)';
+            badge.style.color = '#27AE60';
+            badge.style.borderColor = 'rgba(39,174,96,0.3)';
+            badge.textContent = '🟢 FORCE OPEN';
+        } else if (mode === 'closed') {
+            badge.style.background = 'rgba(231,76,60,0.15)';
+            badge.style.color = '#E74C3C';
+            badge.style.borderColor = 'rgba(231,76,60,0.3)';
+            badge.textContent = '🔴 FORCE CLOSED';
+        } else {
+            badge.style.background = isOpen ? 'rgba(39,174,96,0.15)' : 'rgba(231,76,60,0.15)';
+            badge.style.color = isOpen ? '#27AE60' : '#E74C3C';
+            badge.style.borderColor = isOpen ? 'rgba(39,174,96,0.3)' : 'rgba(231,76,60,0.3)';
+            badge.textContent = isOpen ? '🟢 OPEN (AUTO)' : '🔴 CLOSED (AUTO)';
+        }
+    }
+
+    if (subtitle) {
+        subtitle.textContent = adminShopStatus.status_message || 'Schedule: Morning 10:00 AM – 2:00 PM • Evening 6:00 PM – 10:00 PM';
+    }
+
+    // Update button active states
+    const buttons = [
+        { el: btnAuto, key: 'auto', activeBg: '#2C3E50' },
+        { el: btnOpen, key: 'open', activeBg: '#27AE60' },
+        { el: btnClosed, key: 'closed', activeBg: '#C0392B' }
+    ];
+
+    buttons.forEach(b => {
+        if (!b.el) return;
+        if (mode === b.key) {
+            b.el.style.background = b.activeBg;
+            b.el.style.color = '#FFFFFF';
+            b.el.style.borderColor = b.activeBg;
+            b.el.style.fontWeight = '700';
+        } else {
+            b.el.style.background = 'transparent';
+            b.el.style.color = 'var(--primary-dark)';
+            b.el.style.borderColor = 'var(--gold-border)';
+            b.el.style.fontWeight = '500';
+        }
+    });
+}
+
+async function setAdminShopMode(mode) {
+    try {
+        const res = await fetch(`${API_URL}/settings/status`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${adminToken}`
+            },
+            body: JSON.stringify({ mode: mode })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            adminShopStatus = data.status || { mode: mode, is_open: mode === 'open' };
+            renderAdminShopUI();
+            showToast(data.message || `Mode set to ${mode}`, 'success');
+            return;
+        } else {
+            showToast(data.error || 'Failed to update shop mode', 'error');
+        }
+    } catch (err) {
+        adminShopStatus.mode = mode;
+        adminShopStatus.is_open = mode === 'open' || (mode === 'auto');
+        renderAdminShopUI();
+        showToast(`Shop mode set to ${mode}`, 'info');
+    }
 }
 
 // ============================================================
@@ -1348,7 +1479,7 @@ function showPanel(name) {
     if (navBtn) navBtn.classList.add('active');
     document.getElementById('topbar-title').innerHTML = panelTitles[name] || name;
 
-    if (name === 'dashboard') loadOrders();
+    if (name === 'dashboard') { fetchAdminShopStatus(); loadOrders(); }
     if (name === 'orders') loadOrders();
     if (name === 'menu') { renderMenu(); renderCategoryChips(); }
     if (name === 'categories') renderCategoryManage();
@@ -1424,9 +1555,17 @@ function orderRow(o, showTime) {
     const items = o.items ? o.items.map(i => i.name).join(', ') : '-';
     const timeCell = showTime ? `<td>${o.time || '--'}</td>` : '';
 
+    let customerHtml = `<strong>${o.customer_name || 'Guest'}</strong>`;
+    if (o.address) {
+        customerHtml += `<div style="font-size:0.8rem; color:#6B5A4B; margin-top:3px; max-width:220px; white-space:normal;"><i class="fas fa-map-marker-alt" style="color:#C0392B;"></i> ${o.address}</div>`;
+    }
+    if (o.location_url) {
+        customerHtml += `<div style="margin-top:3px;"><a href="${o.location_url}" target="_blank" style="display:inline-flex; align-items:center; gap:4px; font-size:0.75rem; color:#27AE60; font-weight:600; text-decoration:none; background:rgba(39,174,96,0.1); padding:2px 8px; border-radius:6px;"><i class="fas fa-location-arrow"></i> View Map</a></div>`;
+    }
+
     return `<tr>
         <td><strong>#${o.id}</strong></td>
-        <td>${o.customer_name || 'Guest'}</td>
+        <td>${customerHtml}</td>
         <td style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${items}</td>
         <td><strong>₹${o.total_price}</strong></td>
         ${timeCell}
@@ -1467,6 +1606,7 @@ async function updateOrderStatus(orderId, newStatus) {
 }
 
 function refreshData() {
+    fetchAdminShopStatus();
     loadOrders();
     showToast('Data refreshed!', 'info');
 }
