@@ -1513,24 +1513,12 @@
             </div>
 
             <!-- Delivery Address (Optional) -->
-            <div style="margin-bottom:14px;">
+            <div style="margin-bottom:16px;">
                 <label style="display:block; font-weight:600; margin-bottom:6px; font-size:0.9rem; color:var(--primary-dark);">Delivery Address / Landmark <span style="font-size:0.8rem; color:#8A7A6A; font-weight:normal;">(Optional)</span></label>
                 <textarea id="customer-address-input" rows="2" placeholder="e.g. Flat 302, Sai Residency, Near Station, Andheri West" style="width:100%; padding:10px 14px; border:1.5px solid var(--gold-border); border-radius:12px; font-size:0.95rem; font-family:inherit; resize:vertical; box-sizing:border-box;"></textarea>
-            </div>
-
-            <!-- Location Sharing (Optional) -->
-            <div style="margin-bottom:18px;">
-                <label style="display:block; font-weight:600; margin-bottom:6px; font-size:0.9rem; color:var(--primary-dark);">Live Location <span style="font-size:0.8rem; color:#8A7A6A; font-weight:normal;">(Optional)</span></label>
-                <button type="button" id="btn-share-location" class="btn-location" onclick="captureLocation()">
-                    <i class="fas fa-location-crosshairs"></i>
-                    <span id="location-btn-text">📍 Share Current Location</span>
-                </button>
-                <div id="location-status" style="font-size:0.82rem; color:#27AE60; font-weight:600; margin-top:6px; display:none; display:flex; align-items:center; gap:6px;">
-                    <i class="fas fa-check-circle"></i> <span>Location captured!</span>
-                    <button type="button" onclick="clearLocation()" style="background:none; border:none; color:#C0392B; text-decoration:underline; font-size:0.8rem; cursor:pointer; margin-left:auto;">Remove</button>
-                </div>
-                <p style="font-size:0.78rem; color:#8A7A6A; margin-top:5px; line-height:1.3;">
-                    💡 <em>Not compulsory &mdash; you can also share your address or location directly on WhatsApp.</em>
+                <p style="font-size:0.82rem; color:#6A5A4A; margin-top:6px; line-height:1.35; display:flex; align-items:center; gap:6px;">
+                    <i class="fab fa-whatsapp" style="color:#25D366; font-size:1rem;"></i>
+                    <span><em>You can also share your delivery address directly on WhatsApp.</em></span>
                 </p>
             </div>
 
@@ -2292,59 +2280,6 @@
             }
         }
 
-        // ===================== GEOLOCATION SHARING =====================
-        let capturedLocationUrl = null;
-
-        function captureLocation() {
-            const btn = document.getElementById('btn-share-location');
-            const btnText = document.getElementById('location-btn-text');
-            const statusDiv = document.getElementById('location-status');
-
-            if (!navigator.geolocation) {
-                showToast('Geolocation is not supported by your browser', 'error');
-                return;
-            }
-
-            if (btnText) btnText.textContent = '📡 Locating...';
-
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const lat = position.coords.latitude.toFixed(6);
-                    const lng = position.coords.longitude.toFixed(6);
-                    capturedLocationUrl = `https://maps.google.com/?q=${lat},${lng}`;
-
-                    if (btn) btn.classList.add('active');
-                    if (btnText) btnText.innerHTML = `✅ Location Attached (${lat}, ${lng})`;
-                    if (statusDiv) {
-                        statusDiv.style.display = 'flex';
-                        statusDiv.innerHTML = `<span><i class="fas fa-map-marker-alt"></i> Coordinates: <strong>${lat}, ${lng}</strong> (<a href="${capturedLocationUrl}" target="_blank" style="color:#27AE60;">Preview Map</a>)</span> <button type="button" onclick="clearLocation()" style="background:none; border:none; color:#C0392B; text-decoration:underline; font-size:0.8rem; cursor:pointer; margin-left:auto;">Remove</button>`;
-                    }
-                    showToast('Location captured successfully!', 'success');
-                },
-                (error) => {
-                    if (btnText) btnText.textContent = '📍 Share Current Location';
-                    let errorMsg = 'Unable to get location. You can type your address or share in WhatsApp.';
-                    if (error.code === error.PERMISSION_DENIED) {
-                        errorMsg = 'Location permission denied. You can enter your address manually.';
-                    }
-                    showToast(errorMsg, 'error');
-                },
-                { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
-            );
-        }
-
-        function clearLocation() {
-            capturedLocationUrl = null;
-            const btn = document.getElementById('btn-share-location');
-            const btnText = document.getElementById('location-btn-text');
-            const statusDiv = document.getElementById('location-status');
-
-            if (btn) btn.classList.remove('active');
-            if (btnText) btnText.textContent = '📍 Share Current Location';
-            if (statusDiv) statusDiv.style.display = 'none';
-            showToast('Location removed', 'info');
-        }
-
         // ===================== CART =====================
         let cart = [];
 
@@ -2474,8 +2409,7 @@
                     body: JSON.stringify({
                         customer_name: customerName.trim(),
                         items: items,
-                        address: customerAddress,
-                        location_url: capturedLocationUrl
+                        address: customerAddress
                     })
                 });
 
@@ -2501,7 +2435,6 @@
                         document.getElementById('customer-name-input').value = '';
                         const addressInput = document.getElementById('customer-address-input');
                         if (addressInput) addressInput.value = '';
-                        clearLocation();
                         toggleCart();
                         window.open(whatsappData.whatsapp_url, '_blank');
                         showToast('Order placed! Redirecting to WhatsApp...', 'success');
