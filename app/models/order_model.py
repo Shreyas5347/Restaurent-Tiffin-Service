@@ -1,5 +1,6 @@
 from app.database.db import get_db_connection
 from app.models.settings_model import is_shop_open
+from app.config.config import Config
 
 
 def _ensure_order_columns(cursor):
@@ -364,7 +365,7 @@ def generate_whatsapp_message(order_id):
         if location_url and location_url.strip():
             message += f"🗺️ Shared Location: {location_url.strip()}\n"
 
-        message += f"\nUPI ID: 8828683828@axl\n"
+        message += f"\nUPI ID: {Config.UPI_ID}\n"
         message += "\nI will complete payment now."
 
         return message
