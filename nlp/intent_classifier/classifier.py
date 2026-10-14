@@ -37,27 +37,37 @@ processed_texts = [
 ]
 
 
-# Convert text into numerical vectors
-vectorizer = TfidfVectorizer()
+# Convert text into numerical vectors (unigrams + bigrams for richer context)
+vectorizer = TfidfVectorizer(ngram_range=(1, 2))
 
 X = vectorizer.fit_transform(processed_texts)
 
 
-# Create classifier
-model = LogisticRegression()
+# Create classifier with balanced class weights and tuned regularization
+model = LogisticRegression(C=5.0, class_weight="balanced", max_iter=200)
 
 # Train model
 model.fit(X, labels)
-
+CONFIDENCE_THRESHOLD = 0.40
 
 def predict_intent(text):
+
     processed_text = " ".join(preprocess_text(text))
 
     vector = vectorizer.transform([processed_text])
 
-    prediction = model.predict(vector)
+    probabilities = model.predict_proba(vector)[0]
 
-    return prediction[0]
+    max_probability = probabilities.max()
+
+    predicted_index = probabilities.argmax()
+
+    predicted_intent = model.classes_[predicted_index]
+
+    if max_probability < CONFIDENCE_THRESHOLD:
+        predicted_intent = "UNKNOWN"
+
+    return predicted_intent, max_probability
     
 if __name__ == "__main__":
     while True:
@@ -66,6 +76,7 @@ if __name__ == "__main__":
         if message.lower() == "exit":
             break
 
-        intent = predict_intent(message)
+        intent, confidence = predict_intent(message)
 
         print("Intent:", intent)
+        print("Confidence:", round(confidence, 2))

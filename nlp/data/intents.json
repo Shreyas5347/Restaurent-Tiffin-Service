@@ -7,27 +7,47 @@
                 "Show me the menu",
                 "What dishes are available?",
                 "What can I order?",
-                "Show your food items"
+                "Show your food items",
+                "Can I see the list of items?",
+                "What do you serve here?",
+                "Give me the full food menu",
+                "Send me your menu card",
+                "What items are ready right now?",
+                "Give menu items below 100 rupees",
+                "Show dishes under 200 rs",
+                "What food can I get under 150 bucks?",
+                "List all vegetarian items",
+                "Show non veg menu options",
+                "Do you have drinks and desserts on the menu?",
+                "Show items under budget",
+                "What is on today's special menu?",
+                "Show me all available food",
+                "Can I check your food menu?"
             ]
         },
         {
             "intent": "PRICE_QUERY",
             "examples": [
-                 "How much is the pizza?",
-        "What is the price of a burger?",
-        "How much does biryani cost?",
-        "Tell me the price of paneer tikka",
-        "What does pizza cost?",
-        "How expensive is the pizza?",
-        "How much will I pay for a burger?",
-        "What is the cost of biryani?",
-        "Tell me how much the pasta is",
-        "What are the prices of your dishes?",
-        "How much does a veg pizza cost?",
-        "Price of chicken biryani",
-        "Can you tell me the cost of pizza?",
-        "What is the burger price?",
-        "How much money do I need for pizza?"
+                "How much is the pizza?",
+                "What is the price of a burger?",
+                "How much does biryani cost?",
+                "Tell me the price of paneer tikka",
+                "What does pizza cost?",
+                "How expensive is the pizza?",
+                "How much will I pay for a burger?",
+                "What is the cost of biryani?",
+                "Tell me how much the pasta is",
+                "What are the prices of your dishes?",
+                "How much does a veg pizza cost?",
+                "Price of chicken biryani",
+                "Can you tell me the cost of pizza?",
+                "What is the burger price?",
+                "How much money do I need for pizza?",
+                "What are your price rates?",
+                "How much do you charge for delivery?",
+                "Is the price inclusive of taxes?",
+                "Tell me the rate of this dish",
+                "What is the price list?"
             ]
         },
         {
@@ -37,7 +57,16 @@
                 "Do you deliver to Nashik Road?",
                 "Is home delivery available?",
                 "Can you deliver food to my location?",
-                "Which areas do you deliver to?"
+                "Which areas do you deliver to?",
+                "How long does delivery take?",
+                "What is your delivery coverage area?",
+                "Can you send delivery to college road?",
+                "Do you have doorstep delivery?",
+                "Is parcel or delivery service open now?",
+                "Can you drop the food at my address?",
+                "What are the delivery charges?",
+                "Can you dispatch this order to my house?",
+                "Is delivery free?"
             ]
         },
         {
@@ -47,28 +76,41 @@
                 "When do you close?",
                 "What are your opening hours?",
                 "Are you open today?",
-                "What time does the restaurant close?"
+                "What time does the restaurant close?",
+                "At what time does dinner service start?",
+                "Are you serving right now?",
+                "When is your kitchen open till?",
+                "What are your business hours on weekends?",
+                "Can I visit at 11 PM?",
+                "Are you guys open for breakfast?",
+                "What are your closing times?"
             ]
         },
         {
             "intent": "ORDER_QUERY",
             "examples": [
-                 "I want to order a pizza",
-        "Can I order a burger?",
-        "I want to place an order",
-        "I would like to order food",
-        "I want some biryani",
-        "Can I get a pizza?",
-        "Can I have a burger?",
-        "Give me one pizza",
-        "I would like a pizza",
-        "I want two burgers",
-        "Please get me some food",
-        "I want to buy a pizza",
-        "Can you take my order?",
-        "I would like to place an order",
-        "I want chicken biryani",
-        "Add a pizza to my order"
+                "I want to order a pizza",
+                "Can I order a burger?",
+                "I want to place an order",
+                "I would like to order food",
+                "I want some biryani",
+                "Can I get a pizza?",
+                "Can I have a burger?",
+                "Give me one pizza",
+                "I would like a pizza",
+                "I want two burgers",
+                "Please get me some food",
+                "I want to buy a pizza",
+                "Can you take my order?",
+                "I would like to place an order",
+                "I want chicken biryani",
+                "Add a pizza to my order",
+                "Book an order for me",
+                "Can I buy a meal?",
+                "Deliver one plate of pasta to me",
+                "I need to place a lunch order",
+                "Can you send me two thalis?",
+                "I need an order of pizza"
             ]
         },
         {
@@ -78,29 +120,38 @@
                 "Suggest something good",
                 "What should I eat?",
                 "Suggest a vegetarian dish",
-                "What is your best dish?"
+                "What is your best dish?",
+                "What is your chef special?",
+                "What is popular here?",
+                "Can you help me choose dinner?",
+                "Which item is the most ordered?",
+                "What is today's best recommendation?",
+                "Any recommendations for lunch?",
+                "Suggest top rated items"
             ]
         },
         {
-    "intent": "FEEDBACK",
-    "examples": [
-         "I like your food",
-        "Your pizza is delicious",
-        "The food was amazing",
-        "I love your restaurant",
-        "The burger was great",
-        "The food was terrible",
-        "I did not like the pizza",
-        "The delivery was slow",
-        "The food was cold",
-        "The service was bad",
-        "The pizza tasted amazing",
-        "I had a great experience",
-        "Your food is horrible",
-        "The service was excellent",
-        "I will never order again",
-        "The taste was trash"
-    ]
-    }
+            "intent": "FEEDBACK",
+            "examples": [
+                "I like your food",
+                "Your pizza is delicious",
+                "The food was amazing",
+                "I love your restaurant",
+                "The burger was great",
+                "The food was terrible",
+                "I did not like the pizza",
+                "The delivery was slow",
+                "The food was cold",
+                "The service was bad",
+                "The pizza tasted amazing",
+                "I had a great experience",
+                "Your food is horrible",
+                "The service was excellent",
+                "I will never order again",
+                "The taste was trash",
+                "Very poor quality meal",
+                "Superb taste and great service"
+            ]
+        }
     ]
 }
