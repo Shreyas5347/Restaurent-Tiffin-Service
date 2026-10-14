@@ -1,0 +1,177 @@
+{
+    "test_cases": [
+        {
+            "text": "Could you tell me how much a pizza costs?",
+            "intent": "PRICE_QUERY"
+        },
+        {
+            "text": "What would I have to pay for a burger?",
+            "intent": "PRICE_QUERY"
+        },
+        {
+            "text": "Can I get a pizza?",
+            "intent": "ORDER_QUERY"
+        },
+        {
+            "text": "Please prepare an order for two burgers",
+            "intent": "ORDER_QUERY"
+        },
+        {
+            "text": "I really enjoyed your food",
+            "intent": "FEEDBACK"
+        },
+        {
+            "text": "The delivery was terrible",
+            "intent": "FEEDBACK"
+        },
+        {
+            "text": "Is your restaurant open right now?",
+            "intent": "TIMING_QUERY"
+        },
+        {
+            "text": "At what time does your restaurant shut?",
+            "intent": "TIMING_QUERY"
+        },
+        {
+            "text": "Show me the dishes you serve",
+            "intent": "MENU_QUERY"
+        },
+        {
+            "text": "What items are available on your menu?",
+            "intent": "MENU_QUERY"
+        },
+        {
+            "text": "Recommend something spicy for dinner",
+            "intent": "RECOMMENDATION"
+        },
+        {
+            "text": "Which dish would you suggest for a vegetarian?",
+            "intent": "RECOMMENDATION"
+        },
+        {
+            "text": "Can you deliver to my location?",
+            "intent": "DELIVERY_QUERY"
+        },
+        {
+            "text": "Which neighbourhoods do you deliver to?",
+            "intent": "DELIVERY_QUERY"
+        },
+        {
+    "text": "How much does a small pizza cost?",
+    "intent": "PRICE_QUERY"
+},
+{
+    "text": "What is the price for one plate of pasta?",
+    "intent": "PRICE_QUERY"
+},
+{
+    "text": "Could you please tell me the cost of a vanilla milkshake?",
+    "intent": "PRICE_QUERY"
+},
+{
+    "text": "I want to order one pepperoni pizza",
+    "intent": "ORDER_QUERY"
+},
+{
+    "text": "Prepare an order for two portions of biryani",
+    "intent": "ORDER_QUERY"
+},
+{
+    "text": "Add one chocolate lava cake to my order please",
+    "intent": "ORDER_QUERY"
+},
+{
+    "text": "Can you send the order to New Sangvi?",
+    "intent": "DELIVERY_QUERY"
+},
+{
+    "text": "What is your delivery radius?",
+    "intent": "DELIVERY_QUERY"
+},
+{
+    "text": "Do you serve in the Pimple Saudagar area?",
+    "intent": "DELIVERY_QUERY"
+},
+{
+    "text": "I want to know when you open",
+    "intent": "TIMING_QUERY"
+},
+{
+    "text": "What are your opening hours today?",
+    "intent": "TIMING_QUERY"
+},
+{
+    "text": "When do you close for the night?",
+    "intent": "TIMING_QUERY"
+},
+{
+    "text": "What food items do you have available?",
+    "intent": "MENU_QUERY"
+},
+{
+    "text": "Show me all the vegetarian options",
+    "intent": "MENU_QUERY"
+},
+{
+    "text": "What desserts do you have on your menu?",
+    "intent": "MENU_QUERY"
+},
+{
+    "text": "Which dish would you recommend?",
+    "intent": "RECOMMENDATION"
+},
+{
+    "text": "What is your specialty dish?",
+    "intent": "RECOMMENDATION"
+},
+{
+    "text": "What should I order if I like spicy food?",
+    "intent": "RECOMMENDATION"
+},
+{
+    "text": "I want to order a pizza",
+    "intent": "ORDER_QUERY"
+},
+{
+    "text": "The food was excellent",
+    "intent": "FEEDBACK"
+},
+{
+    "text": "Your delivery service was very fast",
+    "intent": "FEEDBACK"
+},
+{
+    "text": "I did not like the pasta",
+    "intent": "FEEDBACK"
+},
+{
+    "text": "Do you deliver to Wakad?",
+    "intent": "DELIVERY_QUERY"
+},
+{
+    "text": "What time will my order arrive?",
+    "intent": "DELIVERY_QUERY"
+},
+{
+    "text": "Can I have a burger?",
+    "intent": "ORDER_QUERY"
+},
+{
+    "text": "What is the cost of a large pizza?",
+    "intent": "PRICE_QUERY"
+},
+{
+    "text": "What food is available?",
+    "intent": "MENU_QUERY"
+},
+{
+    "text": "Is the restaurant open now?",
+    "intent": "TIMING_QUERY"
+},
+{
+    "text": "Suggest something nice",
+    "intent": "RECOMMENDATION"
+}
+
+    ]
+}
