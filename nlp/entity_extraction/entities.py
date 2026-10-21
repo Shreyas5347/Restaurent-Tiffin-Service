@@ -1,7 +1,7 @@
 import re
 
 
-def extract_quantity(text):
+def extract_quantity(text, max_price=None):
     text = text.lower()
 
     number_words = {
@@ -17,20 +17,27 @@ def extract_quantity(text):
         "ten": 10
     }
 
-    # Check for a quantity written as a number.
-    # Examples: 2 pizzas, 3 burgers
-    numeric_match = re.search(
-        r"\b(\d+)\b",
-        text
-    )
-
-    if numeric_match:
-        return int(numeric_match.group(1))
-
-    # Check for a quantity written in words.
+    # 1. First check for quantity written in words (e.g., "three pizzas", "two burgers")
     for word, number in number_words.items():
         if re.search(rf"\b{word}\b", text):
             return number
+
+    # 2. Check for numeric digits tied to items or distinct from price
+    # Exclude price phrases like "under 1000", "₹500", "below 300", "budget 400"
+    clean_text = re.sub(
+        r"(?:under|below|less than|within|budget(?:\s*(?:is|of))?)\s*₹?\s*\d+",
+        " ",
+        text
+    )
+    clean_text = re.sub(r"₹\s*\d+", " ", clean_text)
+
+    # If a max_price was detected, avoid picking that exact number as quantity
+    numeric_matches = re.findall(r"\b(\d+)\b", clean_text)
+    for num_str in numeric_matches:
+        num = int(num_str)
+        if max_price is not None and num == max_price:
+            continue
+        return num
 
     return None
 def extract_max_price(text):
@@ -79,11 +86,11 @@ def extract_food(text: str, menu_items: list[str]) -> str | None:
 
     return None
 def extract_entities(text, menu_items):
-
+    max_price = extract_max_price(text)
     entities = {
         "food": extract_food(text, menu_items),
-        "quantity": extract_quantity(text),
-        "max_price": extract_max_price(text)
+        "quantity": extract_quantity(text, max_price=max_price),
+        "max_price": max_price
     }
 
     # Remove entities that were not detected.
